@@ -1,3 +1,6 @@
+import "@mantine/core/styles.css";
+// import "@mantine/charts/styles.css";
+// import "@mantine/notifications/styles.css";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";

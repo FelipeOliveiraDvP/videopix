@@ -17,6 +17,9 @@ export default function Authenticated({
 
   return (
     <Providers>
+      <header>
+        <h1>{header}</h1>
+      </header>
       <main>{children}</main>
     </Providers>
     // <div className="min-h-screen bg-gray-100">
