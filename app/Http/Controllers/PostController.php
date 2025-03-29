@@ -23,7 +23,7 @@ class PostController extends Controller
    */
   public function create()
   {
-    //
+    return Inertia::render('Posts/Create');
   }
 
   /**
@@ -31,7 +31,12 @@ class PostController extends Controller
    */
   public function store(Request $request)
   {
-    //
+    Post::create($request->validate([
+      'title' => ['required', 'max:50'],
+      'body' => ['required'],
+    ]));
+
+    return to_route('posts.index');
   }
 
   /**
@@ -47,7 +52,9 @@ class PostController extends Controller
    */
   public function edit(Post $post)
   {
-    //
+    return Inertia::render('Posts/Edit', [
+      'post' => $post
+    ]);
   }
 
   /**
@@ -55,7 +62,12 @@ class PostController extends Controller
    */
   public function update(Request $request, Post $post)
   {
-    //
+    $post->update($request->validate([
+      'title' => ['required', 'max:50'],
+      'body' => ['required'],
+    ]));
+
+    return to_route('posts.index');
   }
 
   /**
