@@ -25,7 +25,7 @@ const Edit = () => {
     <div>
       <h1>You editing the post "{postEdit.title}"</h1>
       <div>
-        <Link href="/posts">Back to Posts List</Link>
+        <Link href={route("posts.index")}>Back to Posts List</Link>
       </div>
       <hr />
       <form onSubmit={handleSubmit}>

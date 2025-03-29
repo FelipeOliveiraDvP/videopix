@@ -15,7 +15,7 @@ const Create = () => {
     <div>
       <h1>Create a new Post</h1>
       <div>
-        <Link href="/posts">Back to Posts List</Link>
+        <Link href={route("posts.index")}>Back to Posts List</Link>
       </div>
       <hr />
       <form onSubmit={handleSubmit}>
