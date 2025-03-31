@@ -1,6 +1,6 @@
-import PrimaryButton from "@/Components/PrimaryButton";
 import AuthLayout from "@/Layouts/AuthLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
+import { Alert, Anchor, Button, Text } from "@mantine/core";
 import { FormEventHandler } from "react";
 
 export default function VerifyEmail({ status }: { status?: string }) {
@@ -14,35 +14,39 @@ export default function VerifyEmail({ status }: { status?: string }) {
 
   return (
     <AuthLayout>
-      <Head title="Email Verification" />
+      <Head title="Verificação de e-mail" />
 
-      <div className="mb-4 text-sm text-gray-600">
-        Thanks for signing up! Before getting started, could you verify your
-        email address by clicking on the link we just emailed to you? If you
-        didn't receive the email, we will gladly send you another.
-      </div>
+      <Text>
+        Obrigado por se cadastrar! Antes de começar, você pode verificar seu
+        endereço de e-mail clicando no link que acabamos de enviar para você? Se
+        você não recebeu o e-mail, podemos enviar outro.
+      </Text>
 
       {status === "verification-link-sent" && (
-        <div className="mb-4 text-sm font-medium text-green-600">
-          A new verification link has been sent to the email address you
-          provided during registration.
-        </div>
+        <Alert
+          variant="light"
+          color="green"
+          title="Link de verificação enviado"
+        >
+          Um novo link de verificação foi enviado para o endereço de e-mail
+          fornecido durante o cadastro.
+        </Alert>
       )}
 
       <form onSubmit={submit}>
         <div className="mt-4 flex items-center justify-between">
-          <PrimaryButton disabled={processing}>
-            Resend Verification Email
-          </PrimaryButton>
+          <Button disabled={processing}>
+            Enviar outro e-mail de verificação
+          </Button>
 
-          <Link
+          <Anchor
+            component={Link}
             href={route("logout")}
             method="post"
             as="button"
-            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Log Out
-          </Link>
+            Sair
+          </Anchor>
         </div>
       </form>
     </AuthLayout>
