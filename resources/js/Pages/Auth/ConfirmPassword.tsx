@@ -1,6 +1,14 @@
+import Logo from "@/Components/Logo";
 import AuthLayout from "@/Layouts/AuthLayout";
 import { Head, useForm } from "@inertiajs/react";
-import { Button, Paper, PasswordInput, Stack } from "@mantine/core";
+import {
+  Button,
+  Paper,
+  PasswordInput,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { FormEventHandler } from "react";
 
 export default function ConfirmPassword() {
@@ -18,9 +26,13 @@ export default function ConfirmPassword() {
 
   return (
     <AuthLayout>
-      <Head title="Confirm Password" />
+      <Head title="Confirmar Senha" />
 
-      <Paper w={300}>
+      <Paper w={400}>
+        <Stack align="center" mb="md">
+          <Logo variant="white" width={100} />
+          <Text ta="center">Para continuar, confirme sua senha.</Text>
+        </Stack>
         <form onSubmit={submit}>
           <Stack>
             <PasswordInput

@@ -8,8 +8,11 @@ import {
   Button,
   Stack,
   Anchor,
+  Title,
+  Text,
 } from "@mantine/core";
 import AuthLayout from "@/Layouts/AuthLayout";
+import Logo from "@/Components/Logo";
 
 export default function Login({
   status,
@@ -36,11 +39,14 @@ export default function Login({
     <AuthLayout>
       <Head title="Login" />
 
-      {status && (
-        <div className="mb-4 text-sm font-medium text-green-600">{status}</div>
-      )}
-
-      <Paper w={300}>
+      <Paper w={400}>
+        <Stack align="center" mb="md">
+          <Logo variant="white" width={100} />
+          <Title order={2}>Bem vindo ao Video PIX</Title>
+          <Text ta="center">
+            Informe seu e-mail e senha para acessar a plataforma.
+          </Text>
+        </Stack>
         <form onSubmit={submit}>
           <Stack>
             <TextInput
@@ -67,7 +73,11 @@ export default function Login({
             <Button variant="filled" type="submit" loading={processing}>
               Login
             </Button>
-            <Anchor component={Link} href={route("password.request")}>
+            <Anchor
+              component={Link}
+              href={route("password.request")}
+              ta="center"
+            >
               Esqueci minha senha
             </Anchor>
           </Stack>
