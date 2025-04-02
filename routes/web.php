@@ -1,6 +1,13 @@
 <?php
 
+use App\Http\Controllers\BalanceController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\WithdrawController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -8,132 +15,104 @@ Route::middleware(['auth', 'verified'])->group(function () {
   // Admin Routes
   Route::prefix('admin')->middleware('role:admin')->group(function () {
     // Dashboard
-    Route::get('/dashboard', function () {
-      return Inertia::render('Admin/Dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+      ->name('admin.dashboard');
 
     // Customers
-    Route::get('/customers', function () {
-      return Inertia::render('Admin/Customers/Index');
-    })->name('admin.customers.index');
+    Route::get('/customers', [CustomerController::class, 'index'])
+      ->name('admin.customers.index');
 
-    Route::get('/customers/{customer}/edit', function () {
-      return Inertia::render('Admin/Customers/Edit');
-    })->name('admin.customers.edit');
+    Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])
+      ->name('admin.customers.edit');
 
-    Route::post('/customers', function () {
-      return Inertia::render('Admin/Customers/Index');
-    })->name('admin.customers.store');
+    Route::post('/customers', [CustomerController::class, 'store'])
+      ->name('admin.customers.store');
 
-    Route::post('/customers/{customer}', function () {
-      return Inertia::render('Admin/Customers/Edit');
-    })->name('admin.customers.update');
+    Route::post('/customers/{customer}', [CustomerController::class, 'update'])
+      ->name('admin.customers.update');
 
-    Route::delete('/customers/{customer}', function () {
-      return Inertia::render('Admin/Customers/Index');
-    })->name('admin.customers.destroy');
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
+      ->name('admin.customers.destroy');
 
     // Packages
-    Route::get('/packages', function () {
-      return Inertia::render('Admin/Packages/Index');
-    })->name('admin.packages.index');
+    Route::get('/packages', [PackageController::class, 'index'])
+      ->name('admin.packages.index');
 
-    Route::get('/packages/{package}/edit', function () {
-      return Inertia::render('Admin/Packages/Edit');
-    })->name('admin.packages.edit');
+    Route::get('/packages/{package}/edit', [PackageController::class, 'edit'])
+      ->name('admin.packages.edit');
 
-    Route::put('/packages/{package}', function () {
-      return Inertia::render('Admin/Packages/Edit');
-    })->name('admin.packages.update');
+    Route::put('/packages/{package}', [PackageController::class, 'update'])
+      ->name('admin.packages.update');
 
     // Videos
-    Route::get('/videos', function () {
-      return Inertia::render('Admin/Videos/Index');
-    })->name('admin.videos.index');
+    Route::get('/videos', [VideoController::class, 'index'])
+      ->name('admin.videos.index');
 
-    Route::get('/videos/create', function () {
-      return Inertia::render('Admin/Videos/Create');
-    })->name('admin.videos.create');
+    Route::get('/videos/create', [VideoController::class, 'create'])
+      ->name('admin.videos.create');
 
-    Route::post('/videos', function () {
-      return Inertia::render('Admin/Videos/Index');
-    })->name('admin.videos.store');
+    Route::post('/videos', [VideoController::class, 'store'])
+      ->name('admin.videos.store');
 
-    Route::get('/videos/{video}/edit', function () {
-      return Inertia::render('Admin/Videos/Edit');
-    })->name('admin.videos.edit');
+    Route::get('/videos/{video}/edit', [VideoController::class, 'edit'])
+      ->name('admin.videos.edit');
 
-    Route::post('/videos/{video}', function () {
-      return Inertia::render('Admin/Videos/Index');
-    })->name('admin.videos.update');
+    Route::post('/videos/{video}', [VideoController::class, 'update'])
+      ->name('admin.videos.update');
 
-    Route::delete('/videos/{video}', function () {
-      return Inertia::render('Admin/Videos/Index');
-    })->name('admin.videos.destroy');
+    Route::delete('/videos/{video}', [VideoController::class, 'destroy'])
+      ->name('admin.videos.destroy');
 
     // Balance
-    Route::get('/balances', function () {
-      return Inertia::render('Admin/Balance');
-    })->name('admin.balance');
+    Route::get('/balances', [BalanceController::class, 'index'])
+      ->name('admin.balance');
 
-    Route::patch('/balances/{balance}/approve', function () {
-      return Inertia::render('Admin/Balance');
-    })->name('admin.balance.approve');
+    Route::patch('/balances/{balance}/approve', [BalanceController::class, 'approve'])
+      ->name('admin.balance.approve');
 
-    Route::patch('/balances/{balance}/reject', function () {
-      return Inertia::render('Admin/Balance');
-    })->name('admin.balance.reject');
+    Route::patch('/balances/{balance}/reject', [BalanceController::class, 'reject'])
+      ->name('admin.balance.reject');
   });
 
   // Customer routes
   Route::middleware('role:customer')->group(function () {
     // Videos
-    Route::get('/', function () {
-      return Inertia::render('Customer/Home');
-    })->name('customer.home');
+    Route::get('/', [VideoController::class, 'customerVideos'])
+      ->name('customer.home');
 
-    Route::get('/{video}/watch', function () {
-      return Inertia::render('Customer/Watch');
-    })->name('customer.videos.watch');
+    Route::get('/{video}/watch', [VideoController::class, 'watch'])
+      ->name('customer.videos.watch');
 
-    Route::patch('/{video}/progress', function () {
-      return Inertia::render('Customer/Watch');
-    })->name('customer.videos.progress');
+    Route::patch('/{video}/progress', [VideoController::class, 'progress'])
+      ->name('customer.videos.progress');
 
-    Route::post('/{video}/watched', function () {
-      return Inertia::render('Customer/Watch');
-    })->name('customer.videos.watched');
+    Route::post('/{video}/watched', [VideoController::class, 'watched'])
+      ->name('customer.videos.watched');
 
     // Balance
-    Route::get('/balances', function () {
-      return Inertia::render('Customer/Balance');
-    })->name('customer.balance');
+    Route::get('/balances', [BalanceController::class, 'index'])
+      ->name('customer.balance');
 
     // Withdraw
-    Route::get('/withdraw', function () {
-      return Inertia::render('Customer/Withdraw');
-    })->name('customer.withdraw');
+    Route::get('/withdraw', [WithdrawController::class, 'index'])
+      ->name('customer.withdraw');
 
-    Route::get('/withdraw', function () {
-      return Inertia::render('Customer/Withdraw');
-    })->name('customer.withdraw');
+    Route::post('/withdraw', [WithdrawController::class, 'store'])
+      ->name('customer.withdraw.store');
 
-    Route::post('/withdraw', function () {
-      return Inertia::render('Customer/Withdraw');
-    })->name('customer.withdraw.store');
+    Route::get('/withdraw/thank-you', [WithdrawController::class, 'thankYou'])
+      ->name('customer.withdraw.success');
 
     // Packages
-    Route::get('/packages', function () {
-      return Inertia::render('Customer/Packages');
-    })->name('customer.packages');
+    Route::get('/packages', [PackageController::class, 'index'])
+      ->name('customer.packages');
 
-    Route::get('/checkout/{package}', function () {
-      return Inertia::render('Customer/Checkout');
-    })->name('customer.checkout');
+    // Checkout
+    Route::get('/checkout/{package}', [CheckoutController::class, 'index'])
+      ->name('customer.checkout');
 
-    Route::get('/checkout/{package}/success', function () {
-      return Inertia::render('Customer/ThankYou');
-    })->name('customer.checkout.success');
+    Route::get('/checkout/{package}/success', [CheckoutController::class, 'thankYou'])
+      ->name('customer.checkout.success');
   });
 
   // Profile

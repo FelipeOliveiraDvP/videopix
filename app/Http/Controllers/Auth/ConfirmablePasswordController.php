@@ -12,30 +12,33 @@ use Inertia\Response;
 
 class ConfirmablePasswordController extends Controller
 {
-    /**
-     * Show the confirm password view.
-     */
-    public function show(): Response
-    {
-        return Inertia::render('Auth/ConfirmPassword');
+  /**
+   * Show the confirm password view.
+   */
+  public function show(): Response
+  {
+    return Inertia::render('Auth/ConfirmPassword');
+  }
+
+  /**
+   * Confirm the user's password.
+   */
+  public function store(Request $request): RedirectResponse
+  {
+    if (! Auth::guard('web')->validate([
+      'email' => $request->user()->email,
+      'password' => $request->password,
+    ])) {
+      throw ValidationException::withMessages([
+        'password' => __('auth.password'),
+      ]);
     }
 
-    /**
-     * Confirm the user's password.
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        if (! Auth::guard('web')->validate([
-            'email' => $request->user()->email,
-            'password' => $request->password,
-        ])) {
-            throw ValidationException::withMessages([
-                'password' => __('auth.password'),
-            ]);
-        }
+    $request->session()->put('auth.password_confirmed_at', time());
+    $route_to_redirect = $request->user()->role === 'admin'
+      ? 'admin.dashboard'
+      : 'customer.home';
 
-        $request->session()->put('auth.password_confirmed_at', time());
-
-        return redirect()->intended(route('dashboard', absolute: false));
-    }
+    return redirect()->intended(route($route_to_redirect, absolute: false));
+  }
 }
