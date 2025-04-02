@@ -10,6 +10,16 @@ export interface User {
   role?: "admin" | "customer";
 }
 
+export interface Video {
+  id: number;
+  url: string;
+  duration: number;
+  watched_time: number;
+  price: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export type PageProps<
   T extends Record<string, unknown> = Record<string, unknown>
 > = T & {
