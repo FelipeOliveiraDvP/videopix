@@ -11,11 +11,16 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('posts', function (Blueprint $table) {
+    Schema::create('customers', function (Blueprint $table) {
       $table->id();
-      $table->string('title');
-      $table->text('body');
+      $table->string('phone');
+      $table->dateTime('birth_date');
+      $table->string('cpf');
+      $table->string('pix');
+      $table->boolean('accept_terms')->default(false);
+      $table->foreignId('user_id')->constrained()->onDelete('cascade');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 
@@ -24,6 +29,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('posts');
+    Schema::dropIfExists('customers');
   }
 };
