@@ -7,6 +7,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import Providers from "@/Providers";
+import Logo from "@/Components/Logo";
 
 export default function CustomerLayout({ children }: PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
@@ -31,9 +32,7 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
               size="sm"
             />
             <Group justify="space-between" style={{ flex: 1 }}>
-              <Text fw={700} size="xl" c="indigo">
-                LOGO
-              </Text>
+              <Logo />
               <Group ml="xl" gap={0} visibleFrom="sm">
                 Informações do cliente
               </Group>

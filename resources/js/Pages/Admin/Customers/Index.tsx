@@ -1,12 +1,12 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Head } from "@inertiajs/react";
 
-export default function Dashboard() {
+export default function Index() {
   return (
     <AdminLayout>
-      <Head title="Dashboard" />
+      <Head title="Listar Clientes" />
 
-      <div>You're logged in!</div>
+      <div>Listar Clientes</div>
     </AdminLayout>
   );
 }
