@@ -1,6 +1,6 @@
 import Providers from "@/Providers";
 import { PageProps } from "@/types";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { Button, Container, Group, Stack, Text, Title } from "@mantine/core";
 
 type ErrorPageProps = PageProps<{
@@ -8,19 +8,13 @@ type ErrorPageProps = PageProps<{
 }>;
 
 export default function ErrorPage({ status }: ErrorPageProps) {
-  /**
-   * Alternative way to get the status code using the `usePage` hook.
-   *
-   * `const { status } = usePage().props;`
-   *
-   * [Read more](https://inertiajs.com/error-handling)
-   */
+  const { helpers } = usePage().props;
 
   const title = {
-    503: "503: Serviço Indisponível",
-    500: "500: Erro no Servidor",
-    404: "404: Página Não Encontrada",
-    403: "403: Proibido",
+    503: "Serviço Indisponível",
+    500: "Erro no Servidor",
+    404: "Página Não Encontrada",
+    403: "Proibido",
   }[status];
 
   const description = {
@@ -32,10 +26,10 @@ export default function ErrorPage({ status }: ErrorPageProps) {
 
   return (
     <Providers>
-      <Container h="100%">
+      <Container>
         <Head title={title} />
-        <Stack gap="lg" align="center" justify="center" mt={100}>
-          <Text size="xl" fw={900}>
+        <Stack gap="lg" align="center" justify="center">
+          <Text fw={900} styles={{ root: { fontSize: 120 } }} ta="center">
             {status}
           </Text>
           <Title>{title}</Title>
@@ -45,10 +39,10 @@ export default function ErrorPage({ status }: ErrorPageProps) {
           <Group justify="center">
             {/* TODO: Get the home by user role */}
             <Button
-              variant="subtle"
+              variant="filled"
               component={Link}
               size="md"
-              href={route("admin.dashboard")}
+              href={route(helpers.user_home)}
             >
               Voltar para a home
             </Button>

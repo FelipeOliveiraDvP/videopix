@@ -28,9 +28,9 @@ function users_count()
  */
 function get_user_home()
 {
-  if (Auth::user() === null) return 'login';
+  if (Auth::user() == null) return 'login';
 
-  return Auth::user()->role === 'admin'
+  return Auth::user()->role == 'admin'
     ? 'admin.dashboard'
     : 'customer.home';
 }
