@@ -16,4 +16,7 @@ export type PageProps<
   auth: {
     user: User;
   };
+  helpers: {
+    user_home: string;
+  };
 };

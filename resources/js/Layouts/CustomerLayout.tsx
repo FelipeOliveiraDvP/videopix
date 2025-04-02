@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { AppShell, Burger, Group, Tabs, Text } from "@mantine/core";
+import { AppShell, Burger, Container, Group, Tabs, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
   IconPhoto,
@@ -8,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 import Providers from "@/Providers";
 import Logo from "@/Components/Logo";
+import CustomerHeader from "@/Components/CustomerHeader";
 
 export default function CustomerLayout({ children }: PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
@@ -24,7 +25,8 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
         padding="md"
       >
         <AppShell.Header>
-          <Group h="100%" px="md">
+          <CustomerHeader />
+          {/* <Group h="100%" px="md">
             <Burger
               opened={opened}
               onClick={toggle}
@@ -37,7 +39,7 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
                 Informações do cliente
               </Group>
             </Group>
-          </Group>
+          </Group> */}
         </AppShell.Header>
 
         <AppShell.Navbar py="md" px={4}>
@@ -45,32 +47,7 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Tabs defaultValue="gallery">
-            <Tabs.List>
-              <Tabs.Tab value="gallery" leftSection={<IconPhoto size={12} />}>
-                Gallery
-              </Tabs.Tab>
-              <Tabs.Tab
-                value="messages"
-                leftSection={<IconMessageCircle size={12} />}
-              >
-                Messages
-              </Tabs.Tab>
-              <Tabs.Tab
-                value="settings"
-                leftSection={<IconSettings size={12} />}
-              >
-                Settings
-              </Tabs.Tab>
-            </Tabs.List>
-
-            <Tabs.Panel value="gallery">Gallery tab content</Tabs.Panel>
-
-            <Tabs.Panel value="messages">Messages tab content</Tabs.Panel>
-
-            <Tabs.Panel value="settings">Settings tab content</Tabs.Panel>
-          </Tabs>
-          {children}
+          <Container py="lg">{children}</Container>
         </AppShell.Main>
       </AppShell>
     </Providers>

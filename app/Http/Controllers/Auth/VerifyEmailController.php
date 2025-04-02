@@ -22,10 +22,6 @@ class VerifyEmailController extends Controller
       event(new Verified($request->user()));
     }
 
-    $route_to_redirect = $request->user()->role === 'admin'
-      ? 'admin.dashboard'
-      : 'customer.home';
-
-    return redirect()->intended(route($route_to_redirect, absolute: false) . '?verified=1');
+    return redirect()->intended(route(get_user_home(), absolute: false) . '?verified=1');
   }
 }

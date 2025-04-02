@@ -33,4 +33,12 @@ class BalanceController extends Controller
   {
     return Inertia::render('Admin/Balance');
   }
+
+  /**
+   * Display the customer list of balances.
+   */
+  public function customerBalance(): Response
+  {
+    return Inertia::render('Customer/Balance');
+  }
 }

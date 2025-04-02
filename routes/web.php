@@ -90,7 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
       ->name('customer.videos.watched');
 
     // Balance
-    Route::get('/balances', [BalanceController::class, 'index'])
+    Route::get('/balances', [BalanceController::class, 'customerBalance'])
       ->name('customer.balance');
 
     // Withdraw
@@ -116,9 +116,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
   });
 
   // Profile
-  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-  Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-  Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+  Route::get('/profile', [ProfileController::class, 'edit'])
+    ->name('profile.edit');
+
+  Route::patch('/profile', [ProfileController::class, 'update'])
+    ->name('profile.update');
+
+  Route::delete('/profile', [ProfileController::class, 'destroy'])
+    ->name('profile.destroy');
 });
 
 // TODO: Public route for payment gateway

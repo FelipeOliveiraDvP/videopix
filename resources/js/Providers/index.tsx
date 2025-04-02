@@ -26,7 +26,8 @@ const theme = createTheme({
   components: {
     Anchor: Anchor.extend({
       defaultProps: {
-        c: "primary",
+        fw: "bold",
+        c: "gray.0",
       },
     }),
     Button: Button.extend({

@@ -47,10 +47,6 @@ class RegisteredUserController extends Controller
 
     Auth::login($user);
 
-    $route_to_redirect = $request->user()->role === 'admin'
-      ? 'admin.dashboard'
-      : 'customer.home';
-
-    return redirect(route($route_to_redirect, absolute: false));
+    return redirect(route(get_user_home(), absolute: false));
   }
 }

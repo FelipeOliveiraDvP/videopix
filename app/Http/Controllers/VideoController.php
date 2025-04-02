@@ -63,7 +63,9 @@ class VideoController extends Controller
    */
   public function customerVideos(): Response
   {
-    return Inertia::render('Customer/Home');
+    return Inertia::render('Customer/Home', [
+      'users_count' => users_count(),
+    ]);
   }
 
   /**
