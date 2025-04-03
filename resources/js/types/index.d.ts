@@ -8,7 +8,7 @@ export interface User {
   pix: string;
   email_verified_at?: string;
   role?: "admin" | "customer";
-  balance: number;
+  balance?: number;
 }
 
 export interface Video {
@@ -17,6 +17,15 @@ export interface Video {
   duration: number;
   watched_time: number;
   price: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Package {
+  id: number;
+  name: string;
+  price: number;
+  withdraw_percentage: number;
   created_at: string;
   updated_at: string;
 }
