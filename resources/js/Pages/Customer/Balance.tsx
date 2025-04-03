@@ -1,3 +1,4 @@
+import CustomerBalanceList from "@/Components/Customer/CustomerBalanceList";
 import StatsCard from "@/Components/StatsCard";
 import CustomerLayout from "@/Layouts/CustomerLayout";
 import { Head, Link } from "@inertiajs/react";
@@ -24,6 +25,7 @@ export default function Balance() {
             Sacar Agora
           </Button>
         </Group>
+        <CustomerBalanceList />
       </Stack>
     </CustomerLayout>
   );

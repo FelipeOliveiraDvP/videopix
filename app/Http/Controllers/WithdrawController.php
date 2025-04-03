@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class WithdrawController extends Controller
 {
@@ -21,9 +21,9 @@ class WithdrawController extends Controller
   /**
    * Store a new customer withdraw.
    */
-  public function store(): Response
+  public function store(): RedirectResponse
   {
-    return Inertia::render('Customer/Withdraw');
+    return Redirect::route('customer.withdraw.success')->with('success', 'Saque solicitado com sucesso.');
   }
 
   /**

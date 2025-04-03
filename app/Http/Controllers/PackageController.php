@@ -33,4 +33,14 @@ class PackageController extends Controller
   {
     return Inertia::render('Admin/Packages/Edit');
   }
+
+  /**
+   * Display the customer packages list.
+   */
+  public function customerPackages(): Response
+  {
+    return Inertia::render('Customer/Packages', [
+      'users_count' => users_count(),
+    ]);
+  }
 }

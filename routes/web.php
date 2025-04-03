@@ -93,6 +93,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/balances', [BalanceController::class, 'customerBalance'])
       ->name('customer.balance');
 
+    // Packages
+    Route::get('/packages', [PackageController::class, 'customerPackages'])
+      ->name('customer.packages');
+
     // Withdraw
     Route::get('/withdraw', [WithdrawController::class, 'index'])
       ->name('customer.withdraw');
@@ -102,10 +106,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/withdraw/thank-you', [WithdrawController::class, 'thankYou'])
       ->name('customer.withdraw.success');
-
-    // Packages
-    Route::get('/packages', [PackageController::class, 'index'])
-      ->name('customer.packages');
 
     // Checkout
     Route::get('/checkout/{package}', [CheckoutController::class, 'index'])
