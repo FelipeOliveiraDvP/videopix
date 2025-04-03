@@ -36,7 +36,14 @@ class HandleInertiaRequests extends Middleware
       ],
       'helpers' => [
         'user_home' => get_user_home()
-      ]
+      ],
+      'flash' => function () use ($request) {
+        return [
+          'success' => $request->session()->get('success'),
+          'error' => $request->session()->get('error'),
+          'thank_you' => $request->session()->get('thank_you'),
+        ];
+      },
     ];
   }
 }

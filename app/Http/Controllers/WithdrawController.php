@@ -23,7 +23,8 @@ class WithdrawController extends Controller
    */
   public function store(): RedirectResponse
   {
-    return Redirect::route('customer.withdraw.success')->with('success', 'Saque solicitado com sucesso.');
+    return Redirect::route('customer.withdraw.success')
+      ->with('thank_you', 'withdraw');
   }
 
   /**

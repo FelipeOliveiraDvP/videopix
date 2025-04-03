@@ -21,13 +21,20 @@ export interface Video {
   updated_at: string;
 }
 
-export type PageProps<
-  T extends Record<string, unknown> = Record<string, unknown>
-> = T & {
+export type CustomPageProps = {
   auth: {
     user: User;
   };
   helpers: {
     user_home: string;
   };
+  flash: {
+    success: string;
+    error: string;
+    thank_you: "withdraw" | "checkout";
+  };
 };
+
+export type PageProps<
+  T extends Record<string, unknown> = Record<string, unknown>
+> = T & CustomPageProps;
