@@ -1,10 +1,11 @@
 import { Avatar, Group, Menu, Text, UnstyledButton } from "@mantine/core";
-import { Link, usePage } from "@inertiajs/react";
-import { IconLogout } from "@tabler/icons-react";
+import { Link } from "@inertiajs/react";
+import { IconLogout, IconStackPush } from "@tabler/icons-react";
 import { moneyFormat } from "@/Utils/moneyFormat";
+import { usePageProps } from "@/hooks/usePageProps";
 
 function CustomerButton() {
-  const { auth } = usePage().props;
+  const { auth } = usePageProps();
 
   return (
     <Menu shadow="md" width={150}>
@@ -28,6 +29,13 @@ function CustomerButton() {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Item
+          component={Link}
+          href={route("customer.withdraw")}
+          leftSection={<IconStackPush size={14} />}
+        >
+          Sacar Agora
+        </Menu.Item>
         <Menu.Item
           component={Link}
           method="post"

@@ -1,10 +1,10 @@
-import CustomerLayout from "@/Layouts/CustomerLayout";
-import { CustomPageProps } from "@/types";
-import { Head, Link, router, usePage } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { Button, Center, Container, Group, Stack, Text } from "@mantine/core";
+import { usePageProps } from "@/hooks/usePageProps";
+import CustomerLayout from "@/Layouts/CustomerLayout";
 
 export default function ThankYou() {
-  const { flash } = usePage().props as unknown as CustomPageProps;
+  const { flash } = usePageProps();
 
   if (!flash.thank_you) router.visit(route("customer.home"));
 
