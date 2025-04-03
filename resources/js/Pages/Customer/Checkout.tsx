@@ -1,12 +1,118 @@
 import CustomerLayout from "@/Layouts/CustomerLayout";
-import { Head } from "@inertiajs/react";
+import { moneyFormat } from "@/Utils/moneyFormat";
+import { Head, Link } from "@inertiajs/react";
+import {
+  ActionIcon,
+  Anchor,
+  CopyButton,
+  Grid,
+  Image,
+  Paper,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+  Tooltip,
+} from "@mantine/core";
+import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { useState } from "react";
 
 export default function Checkout() {
+  const [pixCode, setPixCode] = useState("PIXCODE");
+
+  const handleCopy = (value: string) => {
+    navigator.clipboard.writeText(value);
+  };
   return (
     <CustomerLayout>
       <Head title="Pagamento" />
 
-      <div>Pagamento</div>
+      <Stack gap="lg">
+        <div>
+          <Title order={2}>Finalizar Compra</Title>
+          <Text c="dimmed" size="lg">
+            Para finalizar a sua compra, escaneie o QRCode abaixo ou copie
+            código do PIX e cole no seu aplicativo de banco.
+          </Text>
+        </div>
+        <Paper>
+          <Grid>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Stack justify="space-between">
+                <Title order={3} mb="xs">
+                  Resumo do pedido
+                </Title>
+                <div>
+                  <Text size="md">Pacote Contratado</Text>
+                  <Text size="xl" fw="bold">
+                    Bronze
+                  </Text>
+                </div>
+                <div>
+                  <Text size="md">Preço R$</Text>
+                  <Text size="xl" fw="bold">
+                    {moneyFormat(20)}
+                  </Text>
+                </div>
+                <Text size="md">
+                  Após realizar o pagamento, você receberá um e-mail com a
+                  confirmação da compra.
+                </Text>
+                <Text size="md">
+                  Permaneça na página até que o pagamento seja confirmado. Caso
+                  precise sair por algum motivo, você pode acessar a{" "}
+                  <Anchor component={Link} href={route("customer.balance")}>
+                    página de saldo
+                  </Anchor>{" "}
+                  na sua conta e verificar o status do pagamento.
+                </Text>
+              </Stack>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 6 }}>
+              <Stack>
+                <Image
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE"
+                  alt="QR Code"
+                  width={150}
+                  height={150}
+                  radius="md"
+                />
+                <TextInput
+                  readOnly
+                  value={pixCode}
+                  mt="md"
+                  rightSectionPointerEvents="none"
+                  onChange={(e) => setPixCode(e.currentTarget.value)}
+                  rightSection={
+                    <CopyButton value={pixCode} timeout={2000}>
+                      {({ copied, copy }) => (
+                        <Tooltip
+                          label={copied ? "Copiado" : "Copiar"}
+                          withArrow
+                          position="right"
+                        >
+                          <ActionIcon
+                            color={copied ? "teal" : "gray"}
+                            variant="subtle"
+                            onClick={copy}
+                          >
+                            {copied ? (
+                              <IconCheck size={16} />
+                            ) : (
+                              <IconCopy size={16} />
+                            )}
+                          </ActionIcon>
+                        </Tooltip>
+                      )}
+                    </CopyButton>
+                  }
+                  placeholder="PIX Copia e Cola"
+                />
+              </Stack>
+            </Grid.Col>
+          </Grid>
+        </Paper>
+      </Stack>
     </CustomerLayout>
   );
 }

@@ -63,12 +63,12 @@ export default function Withdraw() {
                 Informações da conta
               </Title>
               <div>
-                <Text fw="bold">Titular</Text>
-                <Text size="sm">Nome</Text>
+                <Text size="sm">Titular</Text>
+                <Text fw="bold">João da Silva</Text>
               </div>
               <div>
-                <Text fw="bold">Chave PIX</Text>
-                <Text size="sm">Nome</Text>
+                <Text size="sm">Chave PIX</Text>
+                <Text fw="bold">12345678909</Text>
               </div>
               <Text c="dimmed" size="sm">
                 Você pode alterar os dados da sua conta{" "}
