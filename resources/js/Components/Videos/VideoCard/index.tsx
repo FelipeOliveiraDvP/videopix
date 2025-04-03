@@ -28,7 +28,7 @@ function VideoCard({ video }: VideoCardProps) {
           }}
         >
           <NumberFormatter
-            prefix="R$"
+            prefix="R$ "
             value={0.25}
             thousandSeparator="."
             decimalSeparator=","
