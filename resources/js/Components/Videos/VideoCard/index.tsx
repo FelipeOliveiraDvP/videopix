@@ -18,10 +18,9 @@ function VideoCard({ video }: VideoCardProps) {
     >
       <Card.Section>
         <Badge
-          color="yellow.5"
-          variant="filled"
+          variant="gradient"
+          gradient={{ from: "orange", to: "yellow", deg: 219 }}
           pos="absolute"
-          c="black"
           style={{
             top: 10,
             right: 10,
