@@ -8,6 +8,7 @@ export interface User {
   pix: string;
   email_verified_at?: string;
   role?: "admin" | "customer";
+  balance: number;
 }
 
 export interface Video {

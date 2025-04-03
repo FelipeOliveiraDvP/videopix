@@ -1,13 +1,16 @@
 import { Anchor, Box, Burger, Container, Group } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import Logo from "../Logo";
 import { Link, usePage } from "@inertiajs/react";
-import UserButton from "../UserButton";
+import Logo from "@/Components/Logo";
+import CustomerButton from "../CustomerButton";
 import classes from "./CustomerHeader.module.css";
 
-function CustomerHeader() {
+interface CustomerHeaderProps {
+  opened: boolean;
+  toggle: () => void;
+}
+
+function CustomerHeader({ opened, toggle }: CustomerHeaderProps) {
   const { props } = usePage();
-  const [opened, { toggle }] = useDisclosure(false);
   const { helpers } = props;
 
   return (
@@ -30,7 +33,9 @@ function CustomerHeader() {
               </Anchor>
             </Group>
           </Box>
-          <UserButton />
+          <Box visibleFrom="sm">
+            <CustomerButton />
+          </Box>
         </Group>
         <Burger
           opened={opened}

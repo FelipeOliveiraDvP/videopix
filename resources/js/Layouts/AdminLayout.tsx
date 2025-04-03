@@ -1,10 +1,10 @@
 import { PropsWithChildren } from "react";
 import { AppShell, Burger, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { Link, usePage } from "@inertiajs/react";
 import Providers from "@/Providers";
 import Logo from "@/Components/Logo";
-import AdminNavbar from "@/Components/AdminNavbar";
-import { Link, usePage } from "@inertiajs/react";
+import AdminNavbar from "@/Components/Admin/AdminNavbar";
 
 export default function AdminLayout({ children }: PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();

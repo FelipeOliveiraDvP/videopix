@@ -3,7 +3,7 @@ import { Avatar, Group, Menu, Text, UnstyledButton } from "@mantine/core";
 import { Link, usePage } from "@inertiajs/react";
 import { IconLogout } from "@tabler/icons-react";
 
-function UserButton() {
+function AdminButton() {
   const { auth } = usePage().props;
 
   return (
@@ -45,4 +45,4 @@ function UserButton() {
   );
 }
 
-export default UserButton;
+export default AdminButton;

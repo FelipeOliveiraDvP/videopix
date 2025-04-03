@@ -8,7 +8,7 @@ import {
 } from "@tabler/icons-react";
 import classes from "./AdminNavbar.module.css";
 import { Link } from "@inertiajs/react";
-import UserButton from "../UserButton";
+import AdminButton from "../AdminButton";
 
 const menuItems = [
   {
@@ -56,7 +56,7 @@ function AdminNavbar() {
   return (
     <nav className={classes.navbar}>
       <div className={classes.section}>
-        <UserButton />
+        <AdminButton />
       </div>
 
       <div className={classes.section}>
