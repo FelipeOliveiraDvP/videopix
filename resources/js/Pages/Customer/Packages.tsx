@@ -1,3 +1,4 @@
+import { packageColors } from "@/constants";
 import { dummyPackages } from "@/dummy";
 import CustomerLayout from "@/Layouts/CustomerLayout";
 import { moneyFormat } from "@/Utils/moneyFormat";
@@ -5,7 +6,6 @@ import { Head, Link } from "@inertiajs/react";
 import {
   Button,
   Card,
-  MantineColor,
   SimpleGrid,
   Stack,
   Text,
@@ -15,14 +15,6 @@ import {
 import { IconCoins } from "@tabler/icons-react";
 
 export default function Packages() {
-  const packageColors: MantineColor[] = [
-    "orange.7",
-    "blue.7",
-    "green.7",
-    "red.7",
-    "violet.7",
-  ];
-
   return (
     <CustomerLayout>
       <Head title="Pacotes" />

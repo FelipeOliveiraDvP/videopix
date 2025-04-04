@@ -60,8 +60,8 @@ const stats: Record<
 
 function StatsCard({ type, value }: StatsCardProps) {
   return (
-    <Paper withBorder p="md" radius="md">
-      <Group justify="apart">
+    <Paper withBorder p={{ base: "sm", md: "md" }} radius="md">
+      <Group justify="space-between" align="start">
         <div>
           <Text c="dimmed" tt="uppercase" fw={700} fz="xs">
             {stats[type].title}
