@@ -1,14 +1,43 @@
 import { Package, Video } from "@/types";
 
-export const dummyVideos: Video[] = Array.from({ length: 4 }, (_, index) => ({
-  id: index + 1,
-  url: `https://www.youtube.com/embed/mzJ4vCjSt28`,
-  duration: Math.floor(Math.random() * 300) + 60, // Random duration between 60 and 360 seconds
-  watched_time: 0,
-  price: Math.floor(Math.random() * 20), // Random price between 0 and 20
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-}));
+export const dummyVideos: Video[] = [
+  {
+    id: 1,
+    url: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
+    duration: 3600,
+    price: 0.5,
+    watched_time: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    url: "https://www.youtube.com/watch?v=Cs8NuWUv8n4",
+    duration: 900,
+    price: 0.5,
+    watched_time: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 3,
+    url: "https://www.youtube.com/watch?v=m8sQAOS6shI",
+    duration: 1800,
+    price: 0.5,
+    watched_time: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 4,
+    url: "https://www.youtube.com/watch?v=cTX-1nNxsLU",
+    duration: 600,
+    price: 0.5,
+    watched_time: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+];
 
 export const dummyPackages: Package[] = [
   {
