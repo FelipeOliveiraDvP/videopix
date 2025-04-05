@@ -1,3 +1,4 @@
+import PackageCard from "@/Components/Packages/PackageCard";
 import { packageColors } from "@/constants";
 import { dummyPackages } from "@/dummy";
 import CustomerLayout from "@/Layouts/CustomerLayout";
@@ -33,41 +34,7 @@ export default function Packages() {
           verticalSpacing={{ base: "sm" }}
         >
           {dummyPackages.map((pack, index) => (
-            <Card key={pack.id}>
-              <Card.Section p="md">
-                <ThemeIcon
-                  color={packageColors[index]}
-                  variant="light"
-                  size={38}
-                  radius="md"
-                >
-                  <IconCoins />
-                </ThemeIcon>
-              </Card.Section>
-              <Card.Section p="md">
-                <Title order={4} mb="xs" fw="normal">
-                  {pack.name}
-                </Title>
-                <Text style={{ fontSize: 28 }} fw={700} mb="xs">
-                  {moneyFormat(pack.price)}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Pode sacar até{" "}
-                  {moneyFormat(pack.price * pack.withdraw_percentage)} por
-                  semana
-                </Text>
-                <Button
-                  variant="outline"
-                  color={packageColors[index]}
-                  component={Link}
-                  href={route("customer.checkout", pack.id)}
-                  fullWidth
-                  mt="md"
-                >
-                  Contratar
-                </Button>
-              </Card.Section>
-            </Card>
+            <PackageCard key={pack.id} pack={pack} index={index} />
           ))}
         </SimpleGrid>
       </Stack>
