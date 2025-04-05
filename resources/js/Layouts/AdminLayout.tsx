@@ -1,14 +1,19 @@
 import { PropsWithChildren } from "react";
-import { AppShell, Burger, Group } from "@mantine/core";
+import { Alert, AppShell, Burger, Group, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Link, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import Providers from "@/Providers";
 import Logo from "@/Components/Logo";
 import AdminNavbar from "@/Components/Admin/AdminNavbar";
+import { usePageProps } from "@/hooks/usePageProps";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export default function AdminLayout({ children }: PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
-  const { helpers } = usePage().props;
+  const {
+    helpers,
+    flash: { error, success },
+  } = usePageProps();
 
   return (
     <Providers>
@@ -37,7 +42,33 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         <AppShell.Navbar>
           <AdminNavbar />
         </AppShell.Navbar>
-        <AppShell.Main>{children}</AppShell.Main>
+        <AppShell.Main>
+          <Stack>
+            {error && (
+              <Alert
+                variant="light"
+                color="red"
+                withCloseButton
+                title="Algum erro ocorreu"
+                icon={<IconInfoCircle />}
+              >
+                {error}
+              </Alert>
+            )}
+            {success && (
+              <Alert
+                variant="light"
+                color="green"
+                withCloseButton
+                title="Sucesso"
+                icon={<IconInfoCircle />}
+              >
+                {success}
+              </Alert>
+            )}
+            {children}
+          </Stack>
+        </AppShell.Main>
       </AppShell>
     </Providers>
   );

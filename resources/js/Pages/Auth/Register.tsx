@@ -1,4 +1,3 @@
-import AuthLayout from "@/Layouts/AuthLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 import {
   Anchor,
@@ -6,6 +5,7 @@ import {
   Center,
   Checkbox,
   Group,
+  InputBase,
   Paper,
   PasswordInput,
   Stack,
@@ -20,12 +20,8 @@ import dayjs from "dayjs";
 import Logo from "@/Components/Logo";
 import Providers from "@/Providers";
 import { useMediaQuery } from "@mantine/hooks";
-import {
-  IconCircleX,
-  IconCircleCheck,
-  IconCircleFilled,
-  IconCircleCheckFilled,
-} from "@tabler/icons-react";
+import { IconCircleX, IconCircleCheck } from "@tabler/icons-react";
+import { IMaskInput } from "react-imask";
 
 export default function Register() {
   const [active, setActive] = useState(1);
@@ -87,13 +83,12 @@ export default function Register() {
 
         <Paper withBorder={false}>
           <Stack align="center" mb="md">
-            <Logo variant="white" width={50} />
+            <Logo variant="white" width={64} />
             <Title order={2} size={18}>
               Bem vindo ao Video PIX
             </Title>
             <Text ta="center" size="sm">
-              Crie sua conta para começar a receber dinheiro para assistir
-              vídeos.
+              Crie sua conta para começar a receber dinheiro assistindo vídeos.
             </Text>
           </Stack>
           <form onSubmit={submit}>
@@ -118,11 +113,13 @@ export default function Register() {
                     onChange={(e) => setData("name", e.target.value)}
                     error={errors.name}
                   />
-                  <TextInput
+                  <InputBase
                     label="CPF"
                     placeholder="000.000.000-00"
+                    component={IMaskInput}
+                    mask="000.000.000-00"
                     value={data.cpf}
-                    onChange={(e) => setData("cpf", e.target.value)}
+                    onChange={(e) => setData("cpf", e.currentTarget.value)}
                     error={errors.cpf}
                   />
                   <DateInput
@@ -155,11 +152,13 @@ export default function Register() {
                     onChange={(e) => setData("email", e.target.value)}
                     error={errors.email}
                   />
-                  <TextInput
+                  <InputBase
                     label="Telefone"
                     placeholder="(00) 00000-0000"
+                    component={IMaskInput}
+                    mask="(00) 00000-0000"
                     value={data.phone}
-                    onChange={(e) => setData("phone", e.target.value)}
+                    onChange={(e) => setData("phone", e.currentTarget.value)}
                     error={errors.phone}
                   />
                 </Stack>
@@ -203,42 +202,58 @@ export default function Register() {
                         (e.target.checked || false) as false
                       )
                     }
+                    error={errors.accept_terms}
                   />
-
-                  {/* <Anchor component={Link} href={route("login")}>
-                    Já tenho uma conta
-                  </Anchor> */}
                 </Stack>
               </Stepper.Step>
               <Stepper.Completed>
-                <Center h={200}>
+                <Center>
                   <Stack align="center" gap="sm">
                     <Text size="lg" fw={500} c="primary">
-                      Você finalizou o cadastro!
+                      Você está quase lá!
                     </Text>
-                    <Text size="sm" c="dimmed">
-                      Você pode acessar sua conta agora mesmo.{" "}
-                      <Anchor component={Link} href={route("login")}>
-                        Clique aqui para ir para o login
-                      </Anchor>
+                    <Text size="sm" c="dimmed" ta="center">
+                      Para finalizar o cadastro, clique no botão abaixo e
+                      verifique seu e-mail para ativar sua conta.
                     </Text>
+                    <Button
+                      size="lg"
+                      variant="gradient"
+                      gradient={{ from: "orange", to: "yellow", deg: 219 }}
+                      type="submit"
+                      loading={processing}
+                    >
+                      Criar conta
+                    </Button>
                   </Stack>
                 </Center>
               </Stepper.Completed>
             </Stepper>
             <Group justify="center" mt="xl">
-              <Button variant="subtle" onClick={prevStep} type="button">
+              <Button
+                variant="subtle"
+                onClick={prevStep}
+                type="button"
+                disabled={active === 0 || processing}
+              >
                 Voltar
               </Button>
-              {active < 3 ? (
-                <Button onClick={nextStep} type="button" loading={processing}>
-                  Próximo passo
-                </Button>
-              ) : (
-                <Button variant="filled" type="submit" loading={processing}>
-                  Criar conta
-                </Button>
-              )}
+              <Button
+                onClick={nextStep}
+                type="button"
+                disabled={active === 3 || processing}
+              >
+                Próximo passo
+              </Button>
+              <Anchor
+                component={Link}
+                href={route("login")}
+                ta="center"
+                mt="md"
+                w="100%"
+              >
+                Já tenho uma conta
+              </Anchor>
             </Group>
           </form>
         </Paper>

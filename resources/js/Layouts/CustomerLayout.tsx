@@ -1,12 +1,17 @@
 import { PropsWithChildren } from "react";
-import { AppShell, Container } from "@mantine/core";
+import { Alert, AppShell, Container, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Providers from "@/Providers";
 import CustomerHeader from "@/Components/Customer/CustomerHeader";
 import CustomerNavbar from "@/Components/Customer/CustomerNavbar";
+import { usePageProps } from "@/hooks/usePageProps";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export default function CustomerLayout({ children }: PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
+  const {
+    flash: { error, success },
+  } = usePageProps();
 
   return (
     <Providers>
@@ -28,6 +33,30 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
         </AppShell.Navbar>
 
         <AppShell.Main>
+          <Stack mb="md">
+            {error && (
+              <Alert
+                variant="light"
+                color="red"
+                withCloseButton
+                title="Algum erro ocorreu"
+                icon={<IconInfoCircle />}
+              >
+                {error}
+              </Alert>
+            )}
+            {success && (
+              <Alert
+                variant="light"
+                color="green"
+                withCloseButton
+                title="Sucesso"
+                icon={<IconInfoCircle />}
+              >
+                {success}
+              </Alert>
+            )}
+          </Stack>
           <Container py="lg">{children}</Container>
         </AppShell.Main>
       </AppShell>

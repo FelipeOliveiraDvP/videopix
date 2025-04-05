@@ -10,6 +10,7 @@ import {
   Anchor,
   Title,
   Text,
+  Divider,
 } from "@mantine/core";
 import AuthLayout from "@/Layouts/AuthLayout";
 import Logo from "@/Components/Logo";
@@ -39,10 +40,12 @@ export default function Login({
     <AuthLayout>
       <Head title="Login" />
 
-      <Paper w={400}>
+      <Paper w={{ base: 320, md: 400 }}>
         <Stack align="center" mb="md">
-          <Logo variant="white" width={100} />
-          <Title order={2}>Bem vindo ao Video PIX</Title>
+          <Logo variant="white" width={64} />
+          <Title order={2} ta="center">
+            Bem vindo ao Video PIX
+          </Title>
           <Text ta="center">
             Informe seu e-mail e senha para acessar a plataforma.
           </Text>
@@ -79,6 +82,10 @@ export default function Login({
               ta="center"
             >
               Esqueci minha senha
+            </Anchor>
+            <Divider label="Ou" />
+            <Anchor component={Link} href={route("register")} ta="center">
+              Criar Conta
             </Anchor>
           </Stack>
         </form>
