@@ -74,7 +74,7 @@ export default function Dashboard() {
                   h={300}
                   data={[...dummyAverageWithdraws, ...dummyAverageDeposits]}
                   dataKey="date"
-                  series={[{ name: "total", color: "orange" }]}
+                  series={[{ name: "total", color: "blue" }]}
                   curveType="natural"
                 />
               </Card>

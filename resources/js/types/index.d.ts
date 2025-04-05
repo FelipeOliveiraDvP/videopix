@@ -2,13 +2,20 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  email_verified_at?: string;
+  role?: "admin" | "customer";
+}
+
+export interface Customer {
+  id: number;
+  name: string;
+  email: string;
   phone: string;
   birth_date: string;
   cpf: string;
   pix: string;
-  email_verified_at?: string;
-  role?: "admin" | "customer";
-  balance?: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Video {
