@@ -6,6 +6,7 @@ import {
   IconStackPush,
   IconUserPlus,
   IconChartLine,
+  IconPackage,
 } from "@tabler/icons-react";
 import { ReactNode } from "react";
 
@@ -15,7 +16,8 @@ type StatType =
   | "deposits"
   | "withdrawals"
   | "invites"
-  | "conversion";
+  | "conversion"
+  | "packages";
 
 interface StatsCardProps {
   value: string;
@@ -54,6 +56,11 @@ const stats: Record<
   conversion: {
     title: "Conversão",
     icon: <IconChartLine size={28} stroke={1.5} />,
+    color: "lime",
+  },
+  packages: {
+    title: "Pacote",
+    icon: <IconPackage size={28} stroke={1.5} />,
     color: "violet",
   },
 };

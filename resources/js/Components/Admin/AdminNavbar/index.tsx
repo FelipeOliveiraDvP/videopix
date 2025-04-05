@@ -2,7 +2,7 @@ import { UnstyledButton } from "@mantine/core";
 import {
   IconArrowsExchange,
   IconDashboard,
-  IconMoneybagPlus,
+  IconPackage,
   IconUsers,
   IconVideo,
 } from "@tabler/icons-react";
@@ -24,7 +24,7 @@ const menuItems = [
   {
     link: route("admin.packages.index"),
     label: "Pacotes",
-    icon: IconMoneybagPlus,
+    icon: IconPackage,
   },
   {
     link: route("admin.videos.index"),
