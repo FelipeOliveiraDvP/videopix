@@ -37,6 +37,10 @@ export interface Package {
   updated_at: string;
 }
 
+export type TransactionType = "deposit" | "withdraw";
+
+export type TransactionStatus = "success" | "pending" | "failed";
+
 export type CustomPageProps = {
   auth: {
     user: User;
