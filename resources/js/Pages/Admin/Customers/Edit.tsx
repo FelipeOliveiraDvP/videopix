@@ -1,35 +1,41 @@
 import StatsCard from "@/Components/StatsCard";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head, router, useForm } from "@inertiajs/react";
+import { Customer } from "@/types";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import {
   ActionIcon,
   Button,
   Container,
   Grid,
   Group,
+  InputBase,
   Paper,
   SimpleGrid,
   Stack,
   TextInput,
   Title,
 } from "@mantine/core";
-import { IconArrowBack, IconArrowLeft } from "@tabler/icons-react";
+import { DateInput } from "@mantine/dates";
+import { IconArrowLeft } from "@tabler/icons-react";
+import dayjs from "dayjs";
 import { FormEventHandler } from "react";
+import { IMaskInput } from "react-imask";
 
 export default function Edit() {
+  const { customer } = usePage<{ customer: Customer }>().props;
   const { data, setData, put, processing, errors, reset } = useForm({
-    name: "",
-    email: "",
-    phone: "",
-    birth_date: "",
-    cpf: "",
-    pix: "",
+    name: customer.name || "",
+    email: customer.email || "",
+    phone: customer.phone || "",
+    birth_date: customer.birth_date || "",
+    cpf: customer.cpf || "",
+    pix: customer.pix || "",
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    put(route("admin.customers.update", { id: 1 }));
+    put(route("admin.customers.update", { id: customer.id }));
   };
 
   return (
@@ -69,25 +75,34 @@ export default function Edit() {
                       onChange={(e) => setData("email", e.currentTarget.value)}
                       error={errors.email}
                     />
-                    <TextInput
+                    <InputBase
                       label="Telefone"
-                      placeholder="Telefone do cliente"
+                      placeholder="(00) 00000-0000"
+                      component={IMaskInput}
+                      mask="(00) 00000-0000"
                       value={data.phone}
                       onChange={(e) => setData("phone", e.currentTarget.value)}
                       error={errors.phone}
                     />
-                    <TextInput
-                      label="Data de Nascimento"
-                      placeholder="Data de nascimento do cliente"
-                      value={data.birth_date}
-                      onChange={(e) =>
-                        setData("birth_date", e.currentTarget.value)
+                    <DateInput
+                      label="Data de nascimento"
+                      placeholder="00/00/0000"
+                      valueFormat="DD/MM/YYYY"
+                      value={
+                        dayjs(data.birth_date).isValid()
+                          ? dayjs(data.birth_date).toDate()
+                          : null
+                      }
+                      onChange={(date) =>
+                        setData("birth_date", dayjs(date).format("YYYY-MM-DD"))
                       }
                       error={errors.birth_date}
                     />
-                    <TextInput
+                    <InputBase
                       label="CPF"
-                      placeholder="CPF do cliente"
+                      placeholder="000.000.000-00"
+                      component={IMaskInput}
+                      mask="000.000.000-00"
                       value={data.cpf}
                       onChange={(e) => setData("cpf", e.currentTarget.value)}
                       error={errors.cpf}

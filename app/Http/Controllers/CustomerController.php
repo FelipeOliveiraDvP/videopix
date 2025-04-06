@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerStoreRequest;
+use App\Http\Requests\CustomerUpdateRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Request;
-
-
-
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -23,49 +25,63 @@ class CustomerController extends Controller
       'customers' => Customer::with('user')
         ->filter(Request::only('name', 'email', 'phone', 'active'))
         ->orderBy('created_at', 'desc')
-        ->paginate(10)
+        ->paginate(100)
         ->withQueryString()
-        ->through(fn($customer) => [
-          'id' => $customer->id,
-          'name' => $customer->user->name,
-          'email' => $customer->user->email,
-          'phone' => $customer->phone,
-          'active' => is_null($customer->deleted_at),
-          'created_at' => $customer->created_at->format('Y-m-d H:i:s'),
-          'updated_at' => $customer->updated_at,
-        ]),
+        ->through(fn($customer) => new CustomerResource($customer)),
     ]);
   }
 
   /**
    * Show the form to edit a specific customer.
    */
-  public function edit(): Response
+  public function edit(Customer $customer): Response
   {
-    return Inertia::render('Admin/Customers/Edit');
+    return Inertia::render('Admin/Customers/Edit', [
+      'customer' => new CustomerResource($customer),
+    ]);
   }
 
   /**
    * Store a new customer.
    */
-  public function store(): Response
+  public function store(CustomerStoreRequest $request): RedirectResponse
   {
-    return Inertia::render('Admin/Customers/Index');
+    $emails = $request->validated()['emails'];
+
+    foreach ($emails as $email) {
+      $token = Str::uuid();
+
+      // Opcional: salvar token no banco para validação futura
+
+      Mail::to($email)->send(new \App\Mail\InviteCustomerMail($token));
+    }
+
+    return redirect()->back()->with('success', 'Convites enviados com sucesso!');
   }
 
   /**
    * Update an existing customer.
    */
-  public function update(): Response
+  public function update(CustomerUpdateRequest $request, Customer $customer): RedirectResponse
   {
-    return Inertia::render('Admin/Customers/Edit');
+    $customer->update($request->validated());
+
+    return redirect()
+      ->route('admin.customers.index')
+      ->with('success', 'Cliente atualizado com sucesso.');
   }
 
   /**
    * Delete a customer.
+   *
    */
-  public function destroy(): Response
+  public function destroy(): RedirectResponse
   {
-    return Inertia::render('Admin/Customers/Index');
+    // Implement the logic to delete a customer
+    // For example, you can use the Customer model to find and delete the customer
+
+    return redirect()
+      ->route('admin.customers.index')
+      ->with('success', 'Cliente excluído com sucesso.');
   }
 }
