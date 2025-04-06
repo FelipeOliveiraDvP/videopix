@@ -4,8 +4,9 @@ import { IconEye, IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { modals } from "@mantine/modals";
 import { router } from "@inertiajs/react";
+import { Customer } from "@/types";
 
-function CustomersList() {
+function CustomersList({ customers }: { customers: Customer[] }) {
   const confirmRemove = (customer: { id: number; name: string }) =>
     modals.openConfirmModal({
       title: (
@@ -33,48 +34,7 @@ function CustomersList() {
       withColumnBorders
       striped
       highlightOnHover
-      records={[
-        {
-          id: 1,
-          name: "Lucas Oliveira",
-          email: "lucas.oliveira@gmail.com",
-          phone: "11987654321",
-          active: true,
-          created_at: "2025-04-03 08:15:36",
-        },
-        {
-          id: 2,
-          name: "Mariana Silva",
-          email: "mariana.silva@gmail.com",
-          phone: "21987654321",
-          active: false,
-          created_at: "2025-04-04 10:30:45",
-        },
-        {
-          id: 3,
-          name: "Carlos Souza",
-          email: "carlos.souza@gmail.com",
-          phone: "31987654321",
-          active: true,
-          created_at: "2025-04-05 14:20:10",
-        },
-        {
-          id: 4,
-          name: "Fernanda Lima",
-          email: "fernanda.lima@gmail.com",
-          phone: "41987654321",
-          active: true,
-          created_at: "2025-04-06 16:45:00",
-        },
-        {
-          id: 5,
-          name: "João Pereira",
-          email: "joao.pereira@gmail.com",
-          phone: "51987654321",
-          active: false,
-          created_at: "2025-04-07 18:15:25",
-        },
-      ]}
+      records={customers}
       columns={[
         {
           accessor: "name",
@@ -121,7 +81,7 @@ function CustomersList() {
               >
                 <IconEye size={16} />
               </ActionIcon>
-              <ActionIcon
+              {/* <ActionIcon
                 variant="light"
                 color="red"
                 size="lg"
@@ -129,7 +89,7 @@ function CustomersList() {
                 onClick={() => confirmRemove(item)}
               >
                 <IconTrash size={16} />
-              </ActionIcon>
+              </ActionIcon> */}
             </Group>
           ),
         },

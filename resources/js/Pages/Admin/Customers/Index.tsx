@@ -1,7 +1,8 @@
 import CustomersInviteModal from "@/Components/Customers/CustomersInviteModal";
 import CustomersList from "@/Components/Customers/CustomersList";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head, router, useForm } from "@inertiajs/react";
+import { Customer, PaginatedResponse } from "@/types";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import {
   Button,
   Checkbox,
@@ -17,30 +18,33 @@ import { IconFilter, IconUserPlus } from "@tabler/icons-react";
 import { FormEventHandler } from "react";
 
 export default function Index() {
+  const { customers } = usePage<{ customers: PaginatedResponse<Customer> }>()
+    .props;
   const [filtersOpened, { toggle: toggleFilters, close: closeFilters }] =
     useDisclosure();
   const [inviteOpened, { toggle: toggleInviteModal, close: closeInviteModal }] =
     useDisclosure();
 
+  console.log(customers);
   const { data, setData, processing, reset } = useForm({
     name: "",
     email: "",
     phone: "",
-    active: false as boolean,
+    active: true as boolean,
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
-    close();
     router.get(
       route("admin.customers.index"),
-      { ...data },
+      { ...data, active: String(data.active) },
       {
         preserveState: true,
         preserveScroll: true,
         replace: true,
       }
     );
+    closeFilters();
   };
 
   return (
@@ -68,7 +72,7 @@ export default function Index() {
             </Group>
           </Group>
 
-          <CustomersList />
+          <CustomersList customers={customers.data} />
         </Stack>
       </Paper>
 
@@ -120,6 +124,7 @@ export default function Index() {
                     replace: true,
                   }
                 );
+                closeFilters();
               }}
             >
               Limpar Filtros

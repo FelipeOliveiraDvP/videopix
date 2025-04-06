@@ -12,6 +12,7 @@ export interface Customer {
   email: string;
   phone: string;
   birth_date: string;
+  active: boolean;
   cpf: string;
   pix: string;
   created_at: string;
