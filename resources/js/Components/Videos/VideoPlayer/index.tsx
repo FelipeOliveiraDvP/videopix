@@ -1,3 +1,5 @@
+import { Video } from "@/types";
+import { router } from "@inertiajs/react";
 import {
   ActionIcon,
   AspectRatio,
@@ -12,17 +14,30 @@ import {
   Text,
 } from "@mantine/core";
 import {
+  IconHeadphones,
+  IconHeadphonesOff,
   IconPlayerPauseFilled,
   IconPlayerPlay,
   IconPlayerPlayFilled,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 
-function VideoPlayer() {
+function VideoPlayer({
+  video,
+  onSetDuration,
+}: {
+  video: Video;
+  onSetDuration?: (duration: number) => void;
+}) {
   const [currentProgress, setCurrentProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [muted, setMuted] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const [lastSentProgress, setLastSentProgress] = useState(0);
+  const [watched, setWatched] = useState(false);
+  const playerRef = useRef<ReactPlayer>(null);
 
   const getTimeElapsed = (currentProgress: number, duration: number) => {
     const elapsed = (currentProgress / 100) * duration;
@@ -38,6 +53,64 @@ function VideoPlayer() {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
+  const handleSpeedChange = () => {
+    if (speed === 1) {
+      setSpeed(1.5);
+    } else if (speed === 1.5) {
+      setSpeed(2);
+    } else {
+      setSpeed(1);
+    }
+  };
+
+  const handleProgress = async ({
+    playedSeconds,
+  }: {
+    playedSeconds: number;
+  }) => {
+    const current = Math.floor(playedSeconds);
+
+    if (current - lastSentProgress >= 10) {
+      setLastSentProgress(current);
+
+      router.patch(
+        route("customer.videos.progress", video.id),
+        { watched_time: current },
+        {
+          preserveState: true,
+          preserveScroll: true,
+          showProgress: false,
+          onSuccess: () => {
+            setCurrentProgress((current / duration) * 100);
+          },
+        }
+      );
+    }
+  };
+
+  const handleWatched = () => {
+    router.post(route("customer.videos.watched", video.id), {
+      watched_time: duration,
+    });
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      playerRef.current?.seekTo(video.watched_time, "seconds");
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [video]);
+
+  useEffect(() => {
+    if (currentProgress >= 95 && !watched) {
+      setIsPlaying(false);
+      setCurrentProgress(100);
+      setWatched(true);
+      handleWatched();
+    }
+  }, [currentProgress]);
+
   return (
     <Box>
       <Box pos="relative">
@@ -46,16 +119,24 @@ function VideoPlayer() {
           style={(theme) => ({ borderRadius: theme.radius.md })}
         >
           <ReactPlayer
-            url="https://www.youtube.com/embed/m-87WoxmfXE?autoplay=1&controls=0&mute=1"
+            ref={playerRef}
+            url={video.url}
             width="100%"
             height="auto"
             controls={false}
+            muted={muted}
             playing={isPlaying}
+            playbackRate={speed}
             onProgress={(progress) => {
               setCurrentProgress((progress.playedSeconds / duration) * 100);
+              handleProgress(progress);
             }}
             onDuration={(duration) => {
               setDuration(duration);
+              onSetDuration && onSetDuration(duration);
+              if (currentProgress >= 95) {
+                handleWatched();
+              }
             }}
             onPlay={() => {
               setIsPlaying(true);
@@ -77,9 +158,10 @@ function VideoPlayer() {
               variant="filled"
               size="lg"
               radius="xl"
-              aria-label="Settings"
+              aria-label="Play/Pause"
               color="primary"
               onClick={() => setIsPlaying(!isPlaying)}
+              disabled={watched}
             >
               {isPlaying ? (
                 <IconPlayerPauseFilled
@@ -92,6 +174,36 @@ function VideoPlayer() {
                   stroke={1.5}
                 />
               )}
+            </ActionIcon>
+            <ActionIcon
+              variant="filled"
+              size="lg"
+              radius="xl"
+              aria-label="Mute/Unmute"
+              color="primary"
+              onClick={() => setMuted(!muted)}
+            >
+              {muted ? (
+                <IconHeadphonesOff
+                  style={{ width: "70%", height: "70%" }}
+                  stroke={1.5}
+                />
+              ) : (
+                <IconHeadphones
+                  style={{ width: "70%", height: "70%" }}
+                  stroke={1.5}
+                />
+              )}
+            </ActionIcon>
+            <ActionIcon
+              variant="filled"
+              size="lg"
+              radius="xl"
+              aria-label="Speed Control"
+              color="primary"
+              onClick={handleSpeedChange}
+            >
+              {speed}x
             </ActionIcon>
             <Text fw="bold">
               {getTimeElapsed(currentProgress, duration)} /{" "}
@@ -107,9 +219,11 @@ function VideoPlayer() {
             Você vai receber{" "}
             <NumberFormatter
               prefix="R$ "
-              value={0.25}
+              value={video.price}
               thousandSeparator="."
               decimalSeparator=","
+              decimalScale={2}
+              fixedDecimalScale={true}
             />
           </Badge>
         </Group>

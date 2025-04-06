@@ -26,6 +26,10 @@ export interface Video {
   price: number;
   created_at: string;
   updated_at: string;
+  pivot?: {
+    watched_at: string;
+    watched_time: number;
+  };
 }
 
 export interface Package {
@@ -58,3 +62,14 @@ export type CustomPageProps = {
 export type PageProps<
   T extends Record<string, unknown> = Record<string, unknown>
 > = T & CustomPageProps;
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  links: Array<{
+    url: string | null;
+    label: string;
+    active: boolean;
+  }>;
+  current_page: number;
+  total: number;
+}

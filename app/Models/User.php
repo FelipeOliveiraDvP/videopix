@@ -47,4 +47,25 @@ class User extends Authenticatable
       'password' => 'hashed',
     ];
   }
+
+  /**
+   * Get the user watched videos.
+   */
+  public function watchedVideos()
+  {
+    return $this->belongsToMany(Video::class, 'user_videos')
+      ->withPivot(['watched', 'watched_time', 'watched_at'])
+      ->wherePivot('watched', false)
+      ->withTimestamps();
+  }
+
+  /**
+   * Get the user unwatched videos.
+   */
+  public function unwatchedVideos()
+  {
+    return Video::whereDoesntHave('users', function ($query) {
+      $query->where('user_id', $this->id);
+    });
+  }
 }

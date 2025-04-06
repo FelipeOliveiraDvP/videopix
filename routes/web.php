@@ -9,7 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WithdrawController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified'])->group(function () {
   // Admin Routes
@@ -28,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/customers', [CustomerController::class, 'store'])
       ->name('admin.customers.store');
 
-    Route::post('/customers/{customer}', [CustomerController::class, 'update'])
+    Route::put('/customers/{customer}', [CustomerController::class, 'update'])
       ->name('admin.customers.update');
 
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
@@ -57,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/videos/{video}/edit', [VideoController::class, 'edit'])
       ->name('admin.videos.edit');
 
-    Route::post('/videos/{video}', [VideoController::class, 'update'])
+    Route::put('/videos/{video}', [VideoController::class, 'update'])
       ->name('admin.videos.update');
 
     Route::delete('/videos/{video}', [VideoController::class, 'destroy'])

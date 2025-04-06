@@ -1,6 +1,12 @@
 import { Video } from "@/types";
 import { Link } from "@inertiajs/react";
-import { AspectRatio, Badge, Card, NumberFormatter } from "@mantine/core";
+import {
+  AspectRatio,
+  Badge,
+  Card,
+  NumberFormatter,
+  Progress,
+} from "@mantine/core";
 import ReactPlayer from "react-player/youtube";
 
 interface VideoCardProps {
@@ -28,9 +34,11 @@ function VideoCard({ video }: VideoCardProps) {
         >
           <NumberFormatter
             prefix="R$ "
-            value={0.25}
+            value={video.price}
             thousandSeparator="."
             decimalSeparator=","
+            decimalScale={2}
+            fixedDecimalScale={true}
           />
         </Badge>
         <AspectRatio
@@ -45,6 +53,19 @@ function VideoCard({ video }: VideoCardProps) {
             light={true}
           />
         </AspectRatio>
+        {video.pivot && (
+          <Progress
+            value={(video.pivot.watched_time / video.duration) * 100}
+            color="grape"
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              width: "100%",
+            }}
+          />
+        )}
       </Card.Section>
     </Card>
   );

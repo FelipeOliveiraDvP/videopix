@@ -1,5 +1,6 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head, router, useForm } from "@inertiajs/react";
+import { Video } from "@/types";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import {
   ActionIcon,
   Button,
@@ -15,16 +16,18 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { FormEventHandler } from "react";
 
 export default function Edit() {
+  const { video } = usePage<{ video: Video }>().props;
+
   const { data, setData, put, processing, errors, reset } = useForm({
-    url: "",
-    price: 0,
-    duration_time: 0,
+    url: video?.url || "",
+    price: video?.price || 0,
+    duration: video?.duration || 0,
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    put(route("admin.videos.update", { ...data }));
+    put(route("admin.videos.update", video.id));
   };
 
   return (

@@ -13,8 +13,9 @@ import { modals } from "@mantine/modals";
 import { router } from "@inertiajs/react";
 import { moneyFormat } from "@/Utils/moneyFormat";
 import ReactPlayer from "react-player";
+import { Video } from "@/types";
 
-function VideoList() {
+function VideoList({ videos }: { videos: Video[] }) {
   const confirmRemove = (video: { id: number }) =>
     modals.openConfirmModal({
       title: <Text fw="bold">Deseja realmente excluir este video?</Text>,
@@ -37,43 +38,7 @@ function VideoList() {
       withColumnBorders
       striped
       highlightOnHover
-      records={[
-        {
-          id: 1,
-          url: "https://www.youtube.com/watch?v=YlUKcNNmywk&list=RD7YvAYIJSSZY&index=27",
-          duration: 321,
-          price: 0.35,
-          created_at: "2025-04-03 08:15:36",
-        },
-        {
-          id: 2,
-          url: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ",
-          duration: 245,
-          price: 0.5,
-          created_at: "2025-04-04 10:20:15",
-        },
-        {
-          id: 3,
-          url: "https://www.youtube.com/watch?v=2Vv-BfVoq4g",
-          duration: 263,
-          price: 0.4,
-          created_at: "2025-04-05 14:35:22",
-        },
-        {
-          id: 4,
-          url: "https://www.youtube.com/watch?v=9bZkp7q19f0",
-          duration: 215,
-          price: 0.3,
-          created_at: "2025-04-06 18:50:45",
-        },
-        {
-          id: 5,
-          url: "https://www.youtube.com/watch?v=OPf0YbXqDm0",
-          duration: 300,
-          price: 0.45,
-          created_at: "2025-04-07 20:10:30",
-        },
-      ]}
+      records={videos}
       columns={[
         {
           accessor: "url",

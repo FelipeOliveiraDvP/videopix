@@ -18,13 +18,12 @@ export default function Create() {
   const { data, setData, post, processing, errors, reset } = useForm({
     url: "",
     price: 0,
-    duration_time: 0,
+    duration: 0,
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
-
-    post(route("admin.videos.store", { ...data }));
+    post(route("admin.videos.store"));
   };
 
   return (
