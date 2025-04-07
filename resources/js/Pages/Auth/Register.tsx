@@ -24,7 +24,7 @@ import { IconCircleX, IconCircleCheck } from "@tabler/icons-react";
 import { IMaskInput } from "react-imask";
 
 export default function Register() {
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
   const matches = useMediaQuery("(min-width: 75em)");
   const { data, setData, post, processing, errors, reset } = useForm({
     name: "",

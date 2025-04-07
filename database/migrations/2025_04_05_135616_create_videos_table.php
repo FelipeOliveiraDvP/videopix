@@ -17,6 +17,7 @@ return new class extends Migration
       $table->integer('duration', false, true)->default(0);
       $table->double('price', 8, 2)->default(0);
       $table->timestamps();
+      $table->softDeletes();
     });
 
     Schema::create('user_videos', function (Blueprint $table) {

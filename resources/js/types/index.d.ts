@@ -52,6 +52,7 @@ export type CustomPageProps = {
   };
   helpers: {
     user_home: string;
+    user_balance: number;
   };
   flash: {
     success: string;

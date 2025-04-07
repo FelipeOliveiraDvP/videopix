@@ -3,6 +3,7 @@ import { Link, usePage } from "@inertiajs/react";
 import Logo from "@/Components/Logo";
 import CustomerButton from "../CustomerButton";
 import classes from "./CustomerHeader.module.css";
+import { usePageProps } from "@/hooks/usePageProps";
 
 interface CustomerHeaderProps {
   opened: boolean;
@@ -10,8 +11,7 @@ interface CustomerHeaderProps {
 }
 
 function CustomerHeader({ opened, toggle }: CustomerHeaderProps) {
-  const { props } = usePage();
-  const { helpers } = props;
+  const { helpers } = usePageProps();
 
   return (
     <header className={classes.header}>

@@ -34,3 +34,18 @@ function get_user_home()
     ? 'admin.dashboard'
     : 'customer.home';
 }
+
+/**
+ * Get the balance of the authenticated user.
+ *
+ * This function retrieves the balance amount for the currently
+ * authenticated user. If the user is not authenticated, it returns 0.
+ *
+ * @return float The balance amount of the authenticated user.
+ */
+function get_user_balance()
+{
+  if (Auth::user() == null) return 0;
+
+  return Auth::user()->balance ? Auth::user()->balance->amount : 0;
+}

@@ -146,6 +146,8 @@ class VideoController extends Controller
       $video->id => ['watched' => true],
     ]);
 
+    $user->balance->add($video->price);
+
     return Redirect::route('customer.home');
   }
 }

@@ -5,7 +5,7 @@ import { moneyFormat } from "@/Utils/moneyFormat";
 import { usePageProps } from "@/hooks/usePageProps";
 
 function CustomerButton() {
-  const { auth } = usePageProps();
+  const { auth, helpers } = usePageProps();
 
   return (
     <Menu shadow="md" width={150}>
@@ -18,7 +18,7 @@ function CustomerButton() {
               </Text>
 
               <Text size="lg" fw={500}>
-                {moneyFormat(150)}
+                {moneyFormat(helpers.user_balance)}
               </Text>
             </div>
             <Avatar radius="xl" color="primary.5" variant="filled">

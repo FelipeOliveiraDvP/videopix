@@ -68,4 +68,12 @@ class User extends Authenticatable
       $query->where('user_id', $this->id);
     });
   }
+
+  /**
+   * Get the user balance.
+   */
+  public function balance()
+  {
+    return $this->hasOne(Balance::class);
+  }
 }
