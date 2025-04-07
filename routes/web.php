@@ -21,17 +21,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/customers', [CustomerController::class, 'index'])
       ->name('admin.customers.index');
 
+    Route::post('/customers/invite', [CustomerController::class, 'invite'])
+      ->name('admin.customers.invite');
+
     Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])
       ->name('admin.customers.edit');
-
-    Route::post('/customers', [CustomerController::class, 'store'])
-      ->name('admin.customers.store');
 
     Route::put('/customers/{customer}', [CustomerController::class, 'update'])
       ->name('admin.customers.update');
 
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
       ->name('admin.customers.destroy');
+
 
     // Packages
     Route::get('/packages', [PackageController::class, 'index'])

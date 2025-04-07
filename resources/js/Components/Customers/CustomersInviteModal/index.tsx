@@ -1,4 +1,4 @@
-import { router, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import {
   Button,
   Group,
@@ -17,22 +17,27 @@ function CustomersInviteModal({
   opened: boolean;
   onClose: () => void;
 }) {
-  const { data, setData, processing, reset } = useForm({
+  const { data, errors, setData, post, processing, reset } = useForm({
     emails: [] as string[],
   });
+
+  const allEmailErrors = Object.entries(errors)
+    .filter(([key]) => key.startsWith("emails."))
+    .map(([, value]) => value);
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    router.post(
-      route("admin.customers.store"),
-      { ...data },
-      {
-        preserveState: true,
-      }
-    );
-    reset();
-    onClose();
+    post(route("admin.customers.invite"), {
+      preserveScroll: true,
+      onSuccess: () => {
+        reset();
+        onClose();
+      },
+      onError: () => {
+        console.log("errors", errors);
+      },
+    });
   };
 
   return (
@@ -55,6 +60,7 @@ function CustomersInviteModal({
               placeholder="Aperte enter para adicionar um e-mail na lista"
               data={data.emails}
               onChange={(value) => setData("emails", value)}
+              error={errors.emails ?? allEmailErrors[0]}
             />
 
             <Text>

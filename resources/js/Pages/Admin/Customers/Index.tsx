@@ -25,7 +25,6 @@ export default function Index() {
   const [inviteOpened, { toggle: toggleInviteModal, close: closeInviteModal }] =
     useDisclosure();
 
-  console.log(customers);
   const { data, setData, processing, reset } = useForm({
     name: "",
     email: "",
