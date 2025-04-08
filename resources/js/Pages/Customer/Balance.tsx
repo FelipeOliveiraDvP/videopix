@@ -1,10 +1,26 @@
 import CustomerBalanceList from "@/Components/Customer/CustomerBalanceList";
 import StatsCard from "@/Components/StatsCard";
 import CustomerLayout from "@/Layouts/CustomerLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Balance as BalanceType } from "@/types";
+import { moneyFormat } from "@/Utils/moneyFormat";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { Button, Group, Stack } from "@mantine/core";
 
 export default function Balance() {
+  const { balance, views_count } = usePage<{
+    views_count: number;
+    balance: BalanceType;
+  }>().props;
+
+  const formatViewsCount = (count: number) => {
+    if (count >= 1_000_000) {
+      return `${(count / 1_000_000).toFixed(1)}M`;
+    } else if (count >= 1_000) {
+      return `${(count / 1_000).toFixed(1)}k`;
+    }
+    return count.toString();
+  };
+
   return (
     <CustomerLayout>
       <Head title="Meus Ganhos" />
@@ -12,8 +28,8 @@ export default function Balance() {
       <Stack gap="lg">
         <Group justify="space-between" align="center">
           <Group>
-            <StatsCard type="balance" value="R$ 0,00" />
-            <StatsCard type="views" value="123k" />
+            <StatsCard type="balance" value={moneyFormat(balance.amount)} />
+            <StatsCard type="views" value={formatViewsCount(views_count)} />
           </Group>
           <Button
             variant="gradient"

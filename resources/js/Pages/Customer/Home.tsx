@@ -1,15 +1,18 @@
 import VideoCard from "@/Components/Videos/VideoCard";
+import { usePageProps } from "@/hooks/usePageProps";
 import CustomerLayout from "@/Layouts/CustomerLayout";
 import { PaginatedResponse, Video } from "@/types";
 import { Head, usePage } from "@inertiajs/react";
 import { Grid, Stack, Title } from "@mantine/core";
 
 export default function Home() {
+  const { helpers } = usePageProps();
   const { videos, watched } = usePage<{
     watched: PaginatedResponse<Video>;
     videos: PaginatedResponse<Video>;
   }>().props;
 
+  console.log(helpers);
   return (
     <CustomerLayout>
       <Head title="Home" />

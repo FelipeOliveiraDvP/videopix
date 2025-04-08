@@ -86,10 +86,10 @@ class User extends Authenticatable
   }
 
   /**
-   * Get the user packages.
+   * Get the user package.
    */
-  public function packages()
+  public function package()
   {
-    return $this->belongsToMany(Package::class, 'user_packages');
+    return $this->belongsToMany(Package::class, 'user_packages')->latest();
   }
 }

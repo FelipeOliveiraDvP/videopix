@@ -50,7 +50,6 @@ function get_user_balance()
   return Auth::user()->balance ? Auth::user()->balance->amount : 0;
 }
 
-
 /**
  * Get the PIX key of the authenticated user.
  *
@@ -61,4 +60,19 @@ function get_user_pix()
   if (Auth::user() == null) return '';
 
   return Auth::user()->customer ? Auth::user()->customer->pix : '';
+}
+
+/**
+ * Get the package of the authenticated user.
+ *
+ * This function retrieves the package associated with the currently
+ * authenticated user. If the user is not authenticated, it returns null.
+ *
+ * @return mixed | null The package of the authenticated user or null if not authenticated.
+ */
+function get_user_package()
+{
+  if (Auth::user() == null) return null;
+
+  return Auth::user()->package;
 }

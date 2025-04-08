@@ -33,31 +33,33 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Stack mb="md">
-            {error && (
-              <Alert
-                variant="light"
-                color="red"
-                withCloseButton
-                title="Algum erro ocorreu"
-                icon={<IconInfoCircle />}
-              >
-                {error}
-              </Alert>
-            )}
-            {success && (
-              <Alert
-                variant="light"
-                color="green"
-                withCloseButton
-                title="Sucesso"
-                icon={<IconInfoCircle />}
-              >
-                {success}
-              </Alert>
-            )}
-          </Stack>
-          <Container py="lg">{children}</Container>
+          <Container py="lg">
+            <Stack mb="md">
+              {error && (
+                <Alert
+                  variant="light"
+                  color="red"
+                  withCloseButton
+                  title="Algum erro ocorreu"
+                  icon={<IconInfoCircle />}
+                >
+                  {error}
+                </Alert>
+              )}
+              {success && (
+                <Alert
+                  variant="light"
+                  color="green"
+                  withCloseButton
+                  title="Sucesso"
+                  icon={<IconInfoCircle />}
+                >
+                  {success}
+                </Alert>
+              )}
+              {children}
+            </Stack>
+          </Container>
         </AppShell.Main>
       </AppShell>
     </Providers>

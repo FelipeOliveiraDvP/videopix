@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserVideo;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BalanceController extends Controller
 {
@@ -39,6 +41,13 @@ class BalanceController extends Controller
    */
   public function customerBalance(): Response
   {
-    return Inertia::render('Customer/Balance');
+    $views_count = UserVideo::where('user_id', Auth::id())
+      ->where('watched', true)
+      ->count();
+
+    return Inertia::render('Customer/Balance', [
+      'views_count' => $views_count,
+      'balance' => Auth::user()->balance,
+    ]);
   }
 }
