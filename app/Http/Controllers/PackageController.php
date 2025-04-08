@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PackageUpdateRequest;
+use App\Models\Package;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
@@ -15,23 +17,31 @@ class PackageController extends Controller
    */
   public function index(): Response
   {
-    return Inertia::render('Admin/Packages/Index');
+    return Inertia::render('Admin/Packages/Index', [
+      'packages' => Package::get(),
+    ]);
   }
 
   /**
    * Show the form to edit a specific package.
    */
-  public function edit(): Response
+  public function edit(Package $package): Response
   {
-    return Inertia::render('Admin/Packages/Edit');
+    return Inertia::render('Admin/Packages/Edit', [
+      'package' => $package,
+    ]);
   }
 
   /**
    * Update an existing package.
    */
-  public function update(): Response
+  public function update(PackageUpdateRequest $request, Package $package): RedirectResponse
   {
-    return Inertia::render('Admin/Packages/Edit');
+    $package->update($request->validated());
+
+    return redirect()
+      ->route('admin.packages.index')
+      ->with('success', 'Pacote atualizado com sucesso.');
   }
 
   /**
@@ -40,7 +50,7 @@ class PackageController extends Controller
   public function customerPackages(): Response
   {
     return Inertia::render('Customer/Packages', [
-      'users_count' => users_count(),
+      'packages' => Package::get(),
     ]);
   }
 }

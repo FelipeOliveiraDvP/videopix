@@ -14,7 +14,7 @@ export default function Edit({
 }: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
   const { auth } = usePageProps();
   const Layout = auth.user.role === "admin" ? AdminLayout : CustomerLayout;
-  console.log("auth", auth.user);
+
   return (
     <Layout>
       <Head title="Minha Conta" />

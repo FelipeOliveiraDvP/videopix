@@ -1,5 +1,6 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head, router, useForm } from "@inertiajs/react";
+import { Package } from "@/types";
+import { Head, router, useForm, usePage } from "@inertiajs/react";
 import {
   ActionIcon,
   Button,
@@ -15,16 +16,17 @@ import { IconArrowLeft } from "@tabler/icons-react";
 import { FormEventHandler } from "react";
 
 export default function Edit() {
+  const { package: pack } = usePage<{ package: Package }>().props;
   const { data, setData, put, processing, errors, reset } = useForm({
-    name: "",
-    price: 0,
-    withdraw_percentage: 0,
+    name: pack.name || "",
+    price: pack.price || 0,
+    withdraw_percentage: pack.withdraw_percentage || 0,
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    put(route("admin.packages.update", { id: 1 }));
+    put(route("admin.packages.update", { id: pack.id }));
   };
 
   return (
@@ -67,15 +69,16 @@ export default function Edit() {
                   decimalScale={2}
                   decimalSeparator=","
                   thousandSeparator="."
+                  fixedDecimalScale
                   min={0}
                 />
                 <NumberInput
                   label="Porcentagem máxima de saque por semana %"
                   placeholder="0%"
                   suffix="%"
-                  value={data.withdraw_percentage}
+                  value={data.withdraw_percentage * 100}
                   onChange={(value) =>
-                    setData("withdraw_percentage", value as number)
+                    setData("withdraw_percentage", (value as number) / 100)
                   }
                   error={errors.withdraw_percentage}
                   step={1}

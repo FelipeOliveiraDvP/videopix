@@ -1,21 +1,15 @@
 import PackageCard from "@/Components/Packages/PackageCard";
-import { packageColors } from "@/constants";
-import { dummyPackages } from "@/dummy";
+
 import CustomerLayout from "@/Layouts/CustomerLayout";
-import { moneyFormat } from "@/Utils/moneyFormat";
-import { Head, Link } from "@inertiajs/react";
-import {
-  Button,
-  Card,
-  SimpleGrid,
-  Stack,
-  Text,
-  ThemeIcon,
-  Title,
-} from "@mantine/core";
-import { IconCoins } from "@tabler/icons-react";
+import { Package } from "@/types";
+import { Head, usePage } from "@inertiajs/react";
+import { SimpleGrid, Stack, Text, Title } from "@mantine/core";
 
 export default function Packages() {
+  const { packages } = usePage<{
+    packages: Package[];
+  }>().props;
+
   return (
     <CustomerLayout>
       <Head title="Pacotes" />
@@ -33,7 +27,7 @@ export default function Packages() {
           spacing={{ base: 10, sm: "sm" }}
           verticalSpacing={{ base: "sm" }}
         >
-          {dummyPackages.map((pack, index) => (
+          {packages.map((pack, index) => (
             <PackageCard key={pack.id} pack={pack} index={index} />
           ))}
         </SimpleGrid>
