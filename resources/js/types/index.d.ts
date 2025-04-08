@@ -4,8 +4,16 @@ export interface User {
   email: string;
   email_verified_at?: string;
   role?: "admin" | "customer";
+  customer: Customer;
+  balance: Balance;
+  created_at: string;
+  updated_at: string;
 }
 
+export interface Balance {
+  id: number;
+  amount: number;
+}
 export interface Customer {
   id: number;
   name: string;
@@ -53,6 +61,7 @@ export type CustomPageProps = {
   helpers: {
     user_home: string;
     user_balance: number;
+    user_pix: string;
   };
   flash: {
     success: string;

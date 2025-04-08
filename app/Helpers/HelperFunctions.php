@@ -49,3 +49,16 @@ function get_user_balance()
 
   return Auth::user()->balance ? Auth::user()->balance->amount : 0;
 }
+
+
+/**
+ * Get the PIX key of the authenticated user.
+ *
+ * @return string The PIX key of the authenticated user.
+ */
+function get_user_pix()
+{
+  if (Auth::user() == null) return '';
+
+  return Auth::user()->customer ? Auth::user()->customer->pix : '';
+}

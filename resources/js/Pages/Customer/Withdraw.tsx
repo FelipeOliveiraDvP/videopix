@@ -1,3 +1,4 @@
+import { usePageProps } from "@/hooks/usePageProps";
 import CustomerLayout from "@/Layouts/CustomerLayout";
 import { moneyFormat } from "@/Utils/moneyFormat";
 import { Head, Link, useForm } from "@inertiajs/react";
@@ -13,6 +14,7 @@ import {
 import { FormEventHandler } from "react";
 
 export default function Withdraw() {
+  const { helpers, auth } = usePageProps();
   const { data, setData, post, processing, errors, reset } = useForm({
     amount: 0,
   });
@@ -64,11 +66,11 @@ export default function Withdraw() {
               </Title>
               <div>
                 <Text size="sm">Titular</Text>
-                <Text fw="bold">João da Silva</Text>
+                <Text fw="bold">{auth.user.name}</Text>
               </div>
               <div>
                 <Text size="sm">Chave PIX</Text>
-                <Text fw="bold">12345678909</Text>
+                <Text fw="bold">{helpers.user_pix}</Text>
               </div>
               <Text c="dimmed" size="sm">
                 Você pode alterar os dados da sua conta{" "}

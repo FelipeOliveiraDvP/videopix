@@ -70,6 +70,14 @@ class User extends Authenticatable
   }
 
   /**
+   * Get the user customer.
+   */
+  public function customer()
+  {
+    return $this->hasOne(Customer::class);
+  }
+
+  /**
    * Get the user balance.
    */
   public function balance()

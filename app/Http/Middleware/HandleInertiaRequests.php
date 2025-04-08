@@ -34,11 +34,12 @@ class HandleInertiaRequests extends Middleware
     return [
       ...parent::share($request),
       'auth' => [
-        'user' => $request->user(),
+        'user' => $request->user()?->load('customer'),
       ],
       'helpers' => [
         'user_home' => get_user_home(),
         'user_balance' => get_user_balance(),
+        'user_pix' => get_user_pix(),
       ],
       'flash' => function () use ($request) {
         return [

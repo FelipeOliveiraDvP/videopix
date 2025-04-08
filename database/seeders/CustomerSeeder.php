@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Balance;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -27,6 +28,10 @@ class CustomerSeeder extends Seeder
       'cpf' => '57696231014',
       'pix' => '57696231014',
       'accept_terms' => true,
+      'user_id' => $user->id,
+    ]);
+
+    Balance::create([
       'user_id' => $user->id,
     ]);
   }

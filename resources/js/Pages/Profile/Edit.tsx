@@ -6,14 +6,15 @@ import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";
 import { Container, Stack } from "@mantine/core";
 import CustomerLayout from "@/Layouts/CustomerLayout";
+import { usePageProps } from "@/hooks/usePageProps";
 
 export default function Edit({
   mustVerifyEmail,
   status,
 }: PageProps<{ mustVerifyEmail: boolean; status?: string }>) {
-  const { auth } = usePage().props;
+  const { auth } = usePageProps();
   const Layout = auth.user.role === "admin" ? AdminLayout : CustomerLayout;
-
+  console.log("auth", auth.user);
   return (
     <Layout>
       <Head title="Minha Conta" />
