@@ -106,6 +106,7 @@ function can_withdraw()
   if (Auth::user() == null) return false;
 
   $total_transactions = Auth::user()->transactions()
+    ->where('transaction_type', 'withdraw')
     ->where('created_at', '>=', now()->startOfWeek())
     ->sum('amount');
 

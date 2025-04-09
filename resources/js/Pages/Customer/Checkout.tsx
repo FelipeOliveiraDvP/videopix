@@ -1,8 +1,11 @@
+import { usePageProps } from "@/hooks/usePageProps";
 import CustomerLayout from "@/Layouts/CustomerLayout";
+import { Package } from "@/types";
 import { moneyFormat } from "@/Utils/moneyFormat";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import {
   ActionIcon,
+  Alert,
   Anchor,
   CopyButton,
   Grid,
@@ -15,14 +18,33 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Checkout() {
-  const [pixCode, setPixCode] = useState("PIXCODE");
+  const { item, pix_code, pix_qr_code } = usePageProps<{
+    item: Package;
+    pix_code: string;
+    pix_qr_code: string;
+  }>();
 
-  const handleCopy = (value: string) => {
-    navigator.clipboard.writeText(value);
-  };
+  const [timer, setTimer] = useState(30);
+
+  useEffect(() => {
+    setTimer(30);
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 1) {
+          router.visit(route("customer.checkout.success", item.id));
+          return 30;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <CustomerLayout>
       <Head title="Pagamento" />
@@ -45,13 +67,13 @@ export default function Checkout() {
                 <div>
                   <Text size="md">Pacote Contratado</Text>
                   <Text size="xl" fw="bold">
-                    Bronze
+                    {item.name}
                   </Text>
                 </div>
                 <div>
                   <Text size="md">Preço R$</Text>
                   <Text size="xl" fw="bold">
-                    {moneyFormat(20)}
+                    {moneyFormat(item.price)}
                   </Text>
                 </div>
                 <Text size="md">
@@ -70,21 +92,26 @@ export default function Checkout() {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
               <Stack>
+                <Alert variant="light" color="yellow">
+                  <Text>
+                    Aguardando a confirmação do pagamento. A página será
+                    atualizada em <b>{timer} segundos.</b>
+                  </Text>
+                </Alert>
                 <Image
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE"
-                  alt="QR Code"
+                  src={pix_qr_code}
+                  alt={pix_code}
                   width={150}
                   height={150}
                   radius="md"
                 />
                 <TextInput
                   readOnly
-                  value={pixCode}
+                  defaultValue={pix_code}
                   mt="md"
                   rightSectionPointerEvents="none"
-                  onChange={(e) => setPixCode(e.currentTarget.value)}
                   rightSection={
-                    <CopyButton value={pixCode} timeout={2000}>
+                    <CopyButton value={pix_qr_code} timeout={2000}>
                       {({ copied, copy }) => (
                         <Tooltip
                           label={copied ? "Copiado" : "Copiar"}
