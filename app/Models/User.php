@@ -92,4 +92,12 @@ class User extends Authenticatable
   {
     return $this->belongsToMany(Package::class, 'user_packages')->latest();
   }
+
+  /**
+   * Get the user transactions.
+   */
+  public function transactions()
+  {
+    return $this->hasMany(Transaction::class);
+  }
 }

@@ -27,6 +27,7 @@ class PackageUpdateRequest extends FormRequest
       'name' => 'required|string',
       'price' => 'required|decimal:0,2|min:0',
       'withdraw_percentage' => 'required|decimal:1|min:0',
+      'duration_in_months' => 'required|integer|min:1|max:12',
     ];
   }
 
@@ -47,6 +48,10 @@ class PackageUpdateRequest extends FormRequest
       'withdraw_percentage.required' => 'A porcentagem de retirada é obrigatória.',
       'withdraw_percentage.decimal' => 'A porcentagem de retirada deve ser um número.',
       'withdraw_percentage.min' => 'A porcentagem de retirada deve ser maior ou igual a 0.',
+      'duration_in_months.required' => 'A duração em meses é obrigatória.',
+      'duration_in_months.integer' => 'A duração em meses deve ser um número inteiro.',
+      'duration_in_months.min' => 'A duração em meses deve ser maior ou igual a 1.',
+      'duration_in_months.max' => 'A duração em meses deve ser menor ou igual a 12.',
     ];
   }
 }

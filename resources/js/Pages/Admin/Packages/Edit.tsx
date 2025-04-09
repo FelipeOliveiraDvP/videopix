@@ -21,6 +21,7 @@ export default function Edit() {
     name: pack.name || "",
     price: pack.price || 0,
     withdraw_percentage: pack.withdraw_percentage || 0,
+    duration_in_months: pack.duration_in_months || 1,
   });
 
   const submit: FormEventHandler = (e) => {
@@ -85,6 +86,20 @@ export default function Edit() {
                   decimalScale={0}
                   min={0}
                   max={100}
+                />
+                <NumberInput
+                  label="Duração do pacote (em meses)"
+                  placeholder="1 mês"
+                  suffix=" mês"
+                  value={data.duration_in_months}
+                  onChange={(value) =>
+                    setData("duration_in_months", value as number)
+                  }
+                  error={errors.duration_in_months}
+                  step={1}
+                  decimalScale={0}
+                  min={1}
+                  max={12}
                 />
 
                 <Button type="submit" maw={250} loading={processing}>

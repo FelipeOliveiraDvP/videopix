@@ -47,6 +47,7 @@ export interface Package {
   name: string;
   price: number;
   withdraw_percentage: number;
+  duration_in_months: number;
   created_at: string;
   updated_at: string;
 }

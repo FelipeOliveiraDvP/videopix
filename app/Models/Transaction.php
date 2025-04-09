@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Package extends Model
+class Transaction extends Model
 {
   use SoftDeletes;
 
@@ -15,10 +15,12 @@ class Package extends Model
    * @var list<string>
    */
   protected $fillable = [
-    'name',
-    'price',
-    'withdraw_percentage',
-    'duration_in_months',
+    'user_id',
+    'amount',
+    'gross_amount',
+    'external_id',
+    'transaction_type',
+    'status',
   ];
 
   /**
@@ -29,16 +31,16 @@ class Package extends Model
   protected function casts(): array
   {
     return [
-      'price' => 'double',
-      'withdraw_percentage' => 'double',
+      'amount' => 'double',
+      'gross_amount' => 'double',
     ];
   }
 
   /**
-   * Get the users who have this package.
+   * Get the users who watched this video.
    */
-  public function users()
+  public function user()
   {
-    return $this->belongsToMany(User::class, 'user_packages');
+    return $this->belongsTo(User::class);
   }
 }
