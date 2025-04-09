@@ -76,3 +76,8 @@ function get_user_package()
 
   return Auth::user()->package;
 }
+
+function only_numbers($string)
+{
+  return preg_replace('/\D/', '', $string);
+}
