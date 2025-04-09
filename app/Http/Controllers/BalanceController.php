@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use App\Models\UserVideo;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -45,9 +46,14 @@ class BalanceController extends Controller
       ->where('watched', true)
       ->count();
 
+    $transactions = Transaction::where('user_id', Auth::id())
+      ->orderBy('created_at', 'desc')
+      ->paginate(100);
+
     return Inertia::render('Customer/Balance', [
       'views_count' => $views_count,
       'balance' => Auth::user()->balance,
+      'transactions' => $transactions,
     ]);
   }
 }

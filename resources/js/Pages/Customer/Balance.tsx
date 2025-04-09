@@ -1,15 +1,20 @@
 import CustomerBalanceList from "@/Components/Customer/CustomerBalanceList";
 import StatsCard from "@/Components/StatsCard";
 import CustomerLayout from "@/Layouts/CustomerLayout";
-import { Balance as BalanceType } from "@/types";
+import {
+  Balance as BalanceType,
+  PaginatedResponse,
+  Transaction,
+} from "@/types";
 import { moneyFormat } from "@/Utils/moneyFormat";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { Button, Group, Stack } from "@mantine/core";
 
 export default function Balance() {
-  const { balance, views_count } = usePage<{
+  const { balance, transactions, views_count } = usePage<{
     views_count: number;
     balance: BalanceType;
+    transactions: PaginatedResponse<Transaction>;
   }>().props;
 
   const formatViewsCount = (count: number) => {
@@ -41,7 +46,7 @@ export default function Balance() {
             Sacar Agora
           </Button>
         </Group>
-        <CustomerBalanceList />
+        <CustomerBalanceList transactions={transactions.data} />
       </Stack>
     </CustomerLayout>
   );

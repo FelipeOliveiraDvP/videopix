@@ -88,7 +88,6 @@ class VideoController extends Controller
         ->unwatchedVideos()
         ->orderBy('created_at', 'desc')
         ->paginate(),
-
     ]);
   }
 

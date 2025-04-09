@@ -52,6 +52,19 @@ export interface Package {
   updated_at: string;
 }
 
+export interface Transaction {
+  id: number;
+  user_id: number;
+  item_id: number;
+  amount: number;
+  gross_amount: number;
+  external_id: string;
+  transaction_type: TransactionType;
+  status: TransactionStatus;
+  created_at: string;
+  updated_at: string;
+}
+
 export type TransactionType = "deposit" | "withdraw";
 
 export type TransactionStatus = "success" | "pending" | "failed";

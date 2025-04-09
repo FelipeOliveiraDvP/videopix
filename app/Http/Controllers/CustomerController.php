@@ -6,7 +6,6 @@ use App\Http\Requests\CustomerInvitationRequest;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
-use App\Services\SendMailService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -57,7 +56,7 @@ class CustomerController extends Controller
   /**
    * Send invitations to customers.
    */
-  public function invite(CustomerInvitationRequest $request, SendMailService $emailService): RedirectResponse
+  public function invite(CustomerInvitationRequest $request): RedirectResponse
   {
     $emails = $request->validated()['emails'];
 

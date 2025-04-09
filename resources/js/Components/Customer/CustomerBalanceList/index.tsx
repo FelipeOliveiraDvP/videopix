@@ -2,55 +2,33 @@ import { moneyFormat } from "@/Utils/moneyFormat";
 import { Badge } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import dayjs from "dayjs";
+import { Transaction } from "@/types";
 
-function CustomerBalanceList() {
+function CustomerBalanceList({
+  transactions,
+}: {
+  transactions: Transaction[];
+}) {
   return (
     <DataTable
       withTableBorder
-      borderRadius="sm"
       withColumnBorders
-      striped
-      highlightOnHover
-      records={[
-        {
-          id: 1,
-          type: "withdraw",
-          total: 150,
-          created_at: "2025-04-03 08:15:36",
-        },
-        {
-          id: 2,
-          type: "deposit",
-          total: 200,
-          created_at: "2025-04-03 08:15:36",
-        },
-        {
-          id: 3,
-          type: "withdraw",
-          total: 150,
-          created_at: "2025-04-03 08:15:36",
-        },
-        {
-          id: 4,
-          type: "deposit",
-          total: 200,
-          created_at: "2025-04-03 08:15:36",
-        },
-      ]}
+      borderRadius="sm"
+      records={transactions}
       columns={[
         {
-          accessor: "type",
+          accessor: "transaction_type",
           title: "Tipo de Transação",
-          render: ({ type }) => (
-            <Badge color={type === "withdraw" ? "red" : "green"}>
-              {type === "withdraw" ? "Saque" : "Depósito"}
+          render: ({ transaction_type }) => (
+            <Badge color={transaction_type === "withdraw" ? "red" : "green"}>
+              {transaction_type === "withdraw" ? "Saque" : "Depósito"}
             </Badge>
           ),
         },
         {
-          accessor: "total",
+          accessor: "amount",
           title: "Valor",
-          render: ({ total }) => moneyFormat(total),
+          render: ({ amount }) => moneyFormat(amount),
         },
         {
           accessor: "created_at",
