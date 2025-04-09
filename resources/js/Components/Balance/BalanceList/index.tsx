@@ -6,7 +6,7 @@ import { modals } from "@mantine/modals";
 import { router } from "@inertiajs/react";
 import { TransactionStatus } from "@/types";
 
-const transactionStatus: Record<
+export const transactionStatus: Record<
   TransactionStatus,
   { label: string; color: MantineColor }
 > = {

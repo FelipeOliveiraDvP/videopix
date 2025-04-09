@@ -1,8 +1,10 @@
 import { usePageProps } from "@/hooks/usePageProps";
 import CustomerLayout from "@/Layouts/CustomerLayout";
+import { Package } from "@/types";
 import { moneyFormat } from "@/Utils/moneyFormat";
 import { Head, Link, useForm } from "@inertiajs/react";
 import {
+  Alert,
   Anchor,
   Button,
   NumberInput,
@@ -14,7 +16,13 @@ import {
 import { FormEventHandler } from "react";
 
 export default function Withdraw() {
-  const { helpers, auth } = usePageProps();
+  const { helpers, auth, total_transactions, current_package, can_withdraw } =
+    usePageProps<{
+      total_transactions: number;
+      current_package: Package;
+      can_withdraw: boolean;
+    }>();
+
   const { data, setData, post, processing, errors, reset } = useForm({
     amount: 0,
   });
@@ -27,6 +35,11 @@ export default function Withdraw() {
     });
   };
 
+  const calcAmountAvailable = () => {
+    const { withdraw_percentage, price } = current_package;
+    return withdraw_percentage * price;
+  };
+  console.log(current_package);
   return (
     <CustomerLayout>
       <Head title="Sacar Valor" />
@@ -53,14 +66,44 @@ export default function Withdraw() {
                 decimalScale={2}
                 decimalSeparator=","
                 thousandSeparator="."
+                fixedDecimalScale
+                max={calcAmountAvailable()}
+                min={0}
               />
-              <Text c="dimmed" size="sm">
-                Você ainda pode retirar {moneyFormat(0)} essa semana. Você pode
-                aumentar esse limite realizando um upgrade no seu pacote{" "}
-                <Anchor component={Link} href={route("customer.packages")}>
-                  clicando aqui.
-                </Anchor>
-              </Text>
+
+              {can_withdraw ? (
+                <Alert variant="light" color="yellow">
+                  <Text size="sm">
+                    Você ainda pode retirar {moneyFormat(calcAmountAvailable())}{" "}
+                    essa semana. Você pode aumentar esse limite agora realizando
+                    um upgrade no seu pacote{" "}
+                    <Anchor
+                      component={Link}
+                      href={route("customer.packages")}
+                      c="primary"
+                    >
+                      clicando aqui.
+                    </Anchor>
+                  </Text>
+                </Alert>
+              ) : (
+                <Alert variant="light" color="red">
+                  <Text size="sm">
+                    Você excedeu o limite de saque de{" "}
+                    {moneyFormat(calcAmountAvailable())} do seu pacote essa
+                    semana. Você pode aumentar esse limite realizando um upgrade
+                    no seu pacote{" "}
+                    <Anchor
+                      component={Link}
+                      c="primary"
+                      href={route("customer.packages")}
+                    >
+                      clicando aqui.
+                    </Anchor>
+                  </Text>
+                </Alert>
+              )}
+
               <Title order={3} size="h4">
                 Informações da conta
               </Title>
@@ -72,20 +115,29 @@ export default function Withdraw() {
                 <Text size="sm">Chave PIX</Text>
                 <Text fw="bold">{helpers.user_pix}</Text>
               </div>
-              <Text c="dimmed" size="sm">
-                Você pode alterar os dados da sua conta{" "}
-                <Anchor component={Link} href={route("profile.edit")}>
-                  clicando aqui.
-                </Anchor>{" "}
-                Após a alteração, você pode voltar aqui e solicitar o saque
-                novamente.
-              </Text>
+
+              <Alert variant="light">
+                <Text size="sm">
+                  Você pode alterar os dados da sua conta{" "}
+                  <Anchor
+                    component={Link}
+                    href={route("profile.edit")}
+                    c="primary"
+                  >
+                    clicando aqui.
+                  </Anchor>{" "}
+                  Após a alteração, você pode voltar aqui e solicitar o saque
+                  novamente.
+                </Text>
+              </Alert>
+
               <Button
                 variant="gradient"
                 size="lg"
                 gradient={{ from: "orange", to: "yellow", deg: 219 }}
                 type="submit"
                 loading={processing}
+                disabled={processing || !can_withdraw}
               >
                 Solicitar Saque
               </Button>

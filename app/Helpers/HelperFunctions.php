@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Package;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -77,7 +78,47 @@ function get_user_package()
   return Auth::user()->package;
 }
 
+/**
+ * Remove all non-numeric characters from a string.
+ *
+ * This function takes a string as input and removes all characters
+ * that are not digits (0-9). It uses a regular expression to perform
+ * the replacement. The resulting string contains only numeric characters.
+ *
+ * @param string $string The input string to be processed.
+ * @return string The input string with all non-numeric characters removed.
+ */
 function only_numbers($string)
 {
   return preg_replace('/\D/', '', $string);
+}
+
+/**
+ * Check if the authenticated user can withdraw.
+ *
+ * This function checks if the currently authenticated user is allowed
+ * to withdraw funds based on their transaction history and package limits.
+ *
+ * @return bool True if the user can withdraw, false otherwise.
+ */
+function can_withdraw()
+{
+  if (Auth::user() == null) return false;
+
+  $total_transactions = Auth::user()->transactions()
+    ->where('created_at', '>=', now()->startOfWeek())
+    ->sum('amount');
+
+  $current_package = Package::where('id', function ($query) {
+    $query->select('package_id')
+      ->from('user_packages')
+      ->where('user_id', Auth::id())
+      ->limit(1);
+  })->first();
+
+  if (!$current_package) return false;
+
+  $limit = $current_package->price * $current_package->withdraw_percentage;
+
+  return $total_transactions < $limit;
 }

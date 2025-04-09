@@ -3,6 +3,7 @@ import { Badge } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import dayjs from "dayjs";
 import { Transaction } from "@/types";
+import { transactionStatus } from "@/Components/Balance/BalanceList";
 
 function CustomerBalanceList({
   transactions,
@@ -17,18 +18,31 @@ function CustomerBalanceList({
       records={transactions}
       columns={[
         {
-          accessor: "transaction_type",
-          title: "Tipo de Transação",
-          render: ({ transaction_type }) => (
-            <Badge color={transaction_type === "withdraw" ? "red" : "green"}>
-              {transaction_type === "withdraw" ? "Saque" : "Depósito"}
-            </Badge>
-          ),
+          accessor: "id",
+          title: "Código",
         },
         {
           accessor: "amount",
           title: "Valor",
           render: ({ amount }) => moneyFormat(amount),
+        },
+        {
+          accessor: "transaction_type",
+          title: "Tipo de Transação",
+          render: ({ transaction_type }) => (
+            <Badge color={transaction_type === "withdraw" ? "green" : "red"}>
+              {transaction_type === "withdraw" ? "Saque" : "Depósito"}
+            </Badge>
+          ),
+        },
+        {
+          accessor: "status",
+          title: "Status",
+          render: ({ status }) => (
+            <Badge color={transactionStatus[status].color}>
+              {transactionStatus[status].label}
+            </Badge>
+          ),
         },
         {
           accessor: "created_at",
