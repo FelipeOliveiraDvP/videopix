@@ -114,6 +114,7 @@ function can_withdraw()
     $query->select('package_id')
       ->from('user_packages')
       ->where('user_id', Auth::id())
+      ->where('expires_at', '>', now())
       ->limit(1);
   })->first();
 

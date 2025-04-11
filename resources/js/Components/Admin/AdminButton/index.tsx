@@ -1,10 +1,11 @@
 import { IconChevronRight } from "@tabler/icons-react";
 import { Avatar, Group, Menu, Text, UnstyledButton } from "@mantine/core";
-import { Link, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import { IconLogout } from "@tabler/icons-react";
+import { usePageProps } from "@/hooks/usePageProps";
 
 function AdminButton() {
-  const { auth } = usePage().props;
+  const { auth } = usePageProps();
 
   return (
     <Menu shadow="md" width={200}>

@@ -36,10 +36,11 @@ function PackageCard({ pack, index }: { pack: Package; index?: number }) {
           variant="outline"
           color={packageColors[index || 0]}
           component={Link}
+          method={auth.user?.role === "admin" ? "get" : "post"}
           href={
             auth.user?.role === "admin"
               ? route("admin.packages.edit", pack.id)
-              : route("customer.checkout", pack.id)
+              : route("customer.checkout.store", pack.id)
           }
           fullWidth
           mt="md"

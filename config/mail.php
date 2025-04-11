@@ -39,6 +39,13 @@ return [
     'mailtrap' => [
       'transport' => 'smtp',
     ],
+
+    'brevo' => [
+      'transport' => 'brevo',
+      'key' => env('BREVO_API_KEY'),
+      'api' => env('BREVO_API_URL'),
+    ],
+
     'smtp' => [
       'transport' => 'smtp',
       'scheme' => env('MAIL_SCHEME'),
@@ -114,5 +121,7 @@ return [
     'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
     'name' => env('MAIL_FROM_NAME', 'Example'),
   ],
+
+
 
 ];

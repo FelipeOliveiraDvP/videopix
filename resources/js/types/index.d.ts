@@ -15,6 +15,7 @@ export interface Balance {
   id: number;
   amount: number;
 }
+
 export interface Customer {
   id: number;
   name: string;
@@ -67,9 +68,11 @@ export interface Transaction {
 
 export type TransactionType = "deposit" | "withdraw";
 
-export type TransactionStatus = "success" | "pending" | "failed";
+export type TransactionStatus = "completed" | "pending" | "failed";
 
-export type CustomPageProps = {
+export type PageProps<
+  T extends Record<string, unknown> = Record<string, unknown>
+> = T & {
   auth: {
     user: User;
   };
@@ -77,7 +80,6 @@ export type CustomPageProps = {
     user_home: string;
     user_balance: number;
     user_pix: string;
-    user_package: Package[] | null;
   };
   flash: {
     success: string;
@@ -85,10 +87,6 @@ export type CustomPageProps = {
     thank_you: "withdraw" | "checkout";
   };
 };
-
-export type PageProps<
-  T extends Record<string, unknown> = Record<string, unknown>
-> = T & CustomPageProps;
 
 export interface PaginatedResponse<T> {
   data: T[];

@@ -108,8 +108,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
       ->name('customer.withdraw.success');
 
     // Checkout
-    Route::get('/checkout/{package}', [CheckoutController::class, 'index'])
-      ->name('customer.checkout');
+    Route::post('/checkout/{package}', [CheckoutController::class, 'store'])
+      ->name('customer.checkout.store');
+
+    Route::get('/checkout/{package}', [CheckoutController::class, 'edit'])
+      ->name('customer.checkout.edit');
+
+    Route::post('/checkout/{package}/status', [CheckoutController::class, 'status'])
+      ->name('customer.checkout.status');
 
     Route::get('/checkout/{package}/success', [CheckoutController::class, 'thankYou'])
       ->name('customer.checkout.success');

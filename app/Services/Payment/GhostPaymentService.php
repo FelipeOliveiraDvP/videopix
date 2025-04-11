@@ -8,6 +8,7 @@ use App\Models\UserPackage;
 use App\Services\Mail\BrevoMailService;
 use Exception;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -16,12 +17,29 @@ class GhostPaymentService implements PaymentService
   public function create(float $amount, array $customer = [], array $item = []): array
   {
     try {
-      if (empty($customer) || empty($item)) {
+      if ($this->invalidCustomer($customer) || $this->invalidItem($item)) {
         throw new \InvalidArgumentException('Invalid customer or item');
       }
 
-      $api_key = env('GHOST_API_KEY');
-      $api_url = env('GHOST_API_URL');
+      if (App::environment('development')) {
+        Transaction::create([
+          'amount' => $amount,
+          'user_id' => $customer['id'],
+          'item_id' => $item['id'],
+          'status' => 'pending',
+          'transaction_type' => 'deposit',
+          'external_id' => '123',
+          'pix_code' => '123456789',
+          'pix_qrcode' => 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE',
+        ]);
+
+        return [
+          'status' => 'success',
+        ];
+      }
+
+      $api_key = config('services.ghost.api_key');
+      $api_url = config('services.ghost.api_url');
 
       $response = Http::withHeaders([
         'Authorization' => $api_key,
@@ -49,20 +67,19 @@ class GhostPaymentService implements PaymentService
         throw new Exception($response->getBody()->getContents());
       }
 
-      $new_transaction = Transaction::create([
+      Transaction::create([
         'amount' => $amount,
-        'user_id' => $customer['user_id'],
-        'item_id' => $items[0]['id'] ?? null,
+        'user_id' => $customer['id'],
+        'item_id' => $item['id'],
         'status' => 'pending',
         'transaction_type' => 'deposit',
-        'transaction_id' => $response['id'],
+        'external_id' => $response['id'],
+        'pix_code' => $response['pixCode'],
+        'pix_qrcode' => $response['pixQrCode'],
       ]);
 
       return [
         'status' => 'success',
-        'transaction_id' => $new_transaction->transaction_id,
-        'pix_code' => $response['pixCode'],
-        'pix_qrcode' => $response['pixQrCode'],
       ];
     } catch (Exception $e) {
       Log::error('Failed to create transaction', [
@@ -93,8 +110,10 @@ class GhostPaymentService implements PaymentService
     if ($status === 'APPROVED' && $transaction->status == 'pending') {
       $transaction->status = 'completed';
 
-      $mail = new BrevoMailService();
-      $mail->send($transaction->user->email, 1);
+      if (App::environment('production')) {
+        $mail = new BrevoMailService();
+        $mail->send($transaction->user->email, 1);
+      }
 
       $user = $transaction->user;
       $package = Package::where('id', $transaction->item_id)->first();
@@ -114,7 +133,7 @@ class GhostPaymentService implements PaymentService
 
       $transaction->save();
     } else {
-      Log::warning('Unknown status received or invalid transaction', [
+      Log::error('Unknown status received or invalid transaction', [
         'transaction_id' => $transaction_id,
         'status' => $status,
       ]);
@@ -125,5 +144,15 @@ class GhostPaymentService implements PaymentService
   private function getExpirationDate(Package $package): string
   {
     return Carbon::parse(now()->addMonths($package->duration_in_months));
+  }
+
+  private function invalidCustomer(array $customer): bool
+  {
+    return empty($customer['id']) || empty($customer['name']) || empty($customer['email']) || empty($customer['phone']) || empty($customer['cpf']);
+  }
+
+  private function invalidItem(array $item): bool
+  {
+    return empty($item['id']) || empty($item['title']);
   }
 }

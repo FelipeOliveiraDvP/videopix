@@ -14,7 +14,7 @@ export const transactionStatus: Record<
     label: "Pendente",
     color: "yellow",
   },
-  success: {
+  completed: {
     label: "Sucesso",
     color: "green",
   },

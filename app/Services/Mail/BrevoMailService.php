@@ -9,7 +9,9 @@ class BrevoMailService implements MailService
 {
   public function send(string $email, string $template_id, array $variables = []): void
   {
-    $config = \SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', env('BREVO_API_KEY'));
+    $api_key = config('mail.mailers.brevo.key');
+
+    $config = \SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $api_key);
     $apiInstance = new \SendinBlue\Client\Api\TransactionalEmailsApi(
       new \GuzzleHttp\Client(),
       $config

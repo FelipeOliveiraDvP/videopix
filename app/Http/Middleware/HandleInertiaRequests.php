@@ -40,7 +40,6 @@ class HandleInertiaRequests extends Middleware
         'user_home' => get_user_home(),
         'user_balance' => get_user_balance(),
         'user_pix' => get_user_pix(),
-        'user_package' => get_user_package(),
       ],
       'flash' => function () use ($request) {
         return [

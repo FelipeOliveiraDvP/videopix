@@ -21,20 +21,25 @@ import { IconCheck, IconCopy } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 export default function Checkout() {
-  const { item, pix_code, pix_qr_code } = usePageProps<{
+  const [timer, setTimer] = useState(30);
+  const { item, pix_code, pix_qrcode } = usePageProps<{
     item: Package;
     pix_code: string;
-    pix_qr_code: string;
+    pix_qrcode: string;
   }>();
-
-  const [timer, setTimer] = useState(30);
 
   useEffect(() => {
     setTimer(30);
     const interval = setInterval(() => {
       setTimer((prev) => {
         if (prev === 1) {
-          router.visit(route("customer.checkout.success", item.id));
+          router.post(
+            route("customer.checkout.status", item.id),
+            {},
+            {
+              preserveScroll: true,
+            }
+          );
           return 30;
         }
 
@@ -99,7 +104,7 @@ export default function Checkout() {
                   </Text>
                 </Alert>
                 <Image
-                  src={pix_qr_code}
+                  src={pix_qrcode}
                   alt={pix_code}
                   width={150}
                   height={150}
@@ -111,7 +116,7 @@ export default function Checkout() {
                   mt="md"
                   rightSectionPointerEvents="none"
                   rightSection={
-                    <CopyButton value={pix_qr_code} timeout={2000}>
+                    <CopyButton value={pix_qrcode} timeout={2000}>
                       {({ copied, copy }) => (
                         <Tooltip
                           label={copied ? "Copiado" : "Copiar"}

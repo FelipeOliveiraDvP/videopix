@@ -4,12 +4,12 @@ import { usePageProps } from "@/hooks/usePageProps";
 import CustomerLayout from "@/Layouts/CustomerLayout";
 
 export default function ThankYou() {
-  const { flash, thank_you } = usePageProps<{ thank_you?: "checkout" }>();
+  const { flash } = usePageProps();
 
   const title = {
     withdraw: "Retirada solicitada com sucesso!",
     checkout: "Pagamento realizado com sucesso!",
-  }[thank_you || flash.thank_you];
+  }[flash.thank_you];
 
   const description = {
     withdraw: (
@@ -36,7 +36,7 @@ export default function ThankYou() {
         </Text>
       </div>
     ),
-  }[thank_you || flash.thank_you];
+  }[flash.thank_you];
 
   return (
     <CustomerLayout>

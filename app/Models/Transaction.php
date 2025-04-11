@@ -20,6 +20,8 @@ class Transaction extends Model
     'amount',
     'gross_amount',
     'external_id',
+    'pix_code',
+    'pix_qrcode',
     'transaction_type',
     'status',
   ];

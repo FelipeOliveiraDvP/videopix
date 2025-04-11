@@ -1,14 +1,15 @@
-import Providers from "@/Providers";
+import { usePageProps } from "@/hooks/usePageProps";
 import { PageProps } from "@/types";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { Button, Container, Group, Stack, Text, Title } from "@mantine/core";
+import Providers from "@/Providers";
 
 type ErrorPageProps = PageProps<{
   status: number;
 }>;
 
 export default function ErrorPage({ status }: ErrorPageProps) {
-  const { helpers } = usePage().props;
+  const { helpers } = usePageProps();
 
   const title = {
     503: "Serviço Indisponível",

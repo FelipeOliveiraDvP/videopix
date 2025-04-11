@@ -26,6 +26,8 @@ export default function Balance() {
     return count.toString();
   };
 
+  console.log(balance, transactions, views_count);
+
   return (
     <CustomerLayout>
       <Head title="Meus Ganhos" />
