@@ -21,17 +21,25 @@ class GhostPaymentService implements PaymentService
         throw new \InvalidArgumentException('Invalid customer or item');
       }
 
+      $transaction = Transaction::where('user_id', $customer['id'])
+        ->where('item_id', $item['id'])
+        ->where('status', 'pending')
+        ->where('transaction_type', 'deposit')
+        ->first();
+
       if (App::environment('development')) {
-        Transaction::create([
-          'amount' => $amount,
-          'user_id' => $customer['id'],
-          'item_id' => $item['id'],
-          'status' => 'pending',
-          'transaction_type' => 'deposit',
-          'external_id' => '123',
-          'pix_code' => '123456789',
-          'pix_qrcode' => 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE',
-        ]);
+        if (!$transaction) {
+          Transaction::create([
+            'amount' => $amount,
+            'user_id' => $customer['id'],
+            'item_id' => $item['id'],
+            'status' => 'pending',
+            'transaction_type' => 'deposit',
+            'external_id' => '123',
+            'pix_code' => '123456789',
+            'pix_qrcode' => 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE',
+          ]);
+        }
 
         return [
           'status' => 'success',
@@ -67,16 +75,25 @@ class GhostPaymentService implements PaymentService
         throw new Exception($response->getBody()->getContents());
       }
 
-      Transaction::create([
-        'amount' => $amount,
-        'user_id' => $customer['id'],
-        'item_id' => $item['id'],
-        'status' => 'pending',
-        'transaction_type' => 'deposit',
-        'external_id' => $response['id'],
-        'pix_code' => $response['pixCode'],
-        'pix_qrcode' => $response['pixQrCode'],
-      ]);
+      if (!$transaction) {
+        Transaction::create([
+          'amount' => $amount,
+          'user_id' => $customer['id'],
+          'item_id' => $item['id'],
+          'status' => 'pending',
+          'transaction_type' => 'deposit',
+          'external_id' => $response['id'],
+          'pix_code' => $response['pixCode'],
+          'pix_qrcode' => $response['pixQrCode'],
+        ]);
+      } else {
+        $transaction->update([
+          'amount' => $amount,
+          'external_id' => $response['id'],
+          'pix_code' => $response['pixCode'],
+          'pix_qrcode' => $response['pixQrCode'],
+        ]);
+      }
 
       return [
         'status' => 'success',
