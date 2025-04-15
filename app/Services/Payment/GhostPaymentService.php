@@ -35,7 +35,7 @@ class GhostPaymentService implements PaymentService
             'item_id' => $item['id'],
             'status' => 'pending',
             'transaction_type' => 'deposit',
-            'external_id' => '123',
+            'external_id' => uniqid(),
             'pix_code' => '123456789',
             'pix_qrcode' => 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE',
           ]);
@@ -115,7 +115,10 @@ class GhostPaymentService implements PaymentService
 
   public function process(string $transaction_id, string $status): void
   {
-    $transaction = Transaction::where('external_id', $transaction_id)->first();
+    $transaction = Transaction::where('external_id', $transaction_id)
+      ->where('transaction_type', 'deposit')
+      ->where('status', 'pending')
+      ->first();
 
     if (!$transaction) {
       Log::error('Transaction not found', [
@@ -124,8 +127,9 @@ class GhostPaymentService implements PaymentService
       return;
     }
 
-    if ($status === 'APPROVED' && $transaction->status == 'pending') {
+    if ($status == 'APPROVED' && $transaction->status == 'pending') {
       $transaction->status = 'completed';
+      $transaction->save();
 
       if (App::environment('production')) {
         $mail = new BrevoMailService();
@@ -148,7 +152,7 @@ class GhostPaymentService implements PaymentService
         ]);
       }
 
-      $transaction->save();
+      $user->balance->add($transaction->amount);
     } else {
       Log::error('Unknown status received or invalid transaction', [
         'transaction_id' => $transaction_id,
