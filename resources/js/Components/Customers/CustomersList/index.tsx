@@ -45,6 +45,10 @@ function CustomersList({ customers }: { customers: Customer[] }) {
           title: "E-mail",
         },
         {
+          accessor: "cpf",
+          title: "CPF",
+        },
+        {
           accessor: "phone",
           title: "Telefone",
         },

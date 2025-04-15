@@ -20,34 +20,42 @@ function CustomerBalanceList({
       columns={[
         {
           accessor: "id",
-          title: "Código",
+          title: "#",
+          width: 80,
         },
         {
           accessor: "amount",
           title: "Valor",
+          width: 120,
           render: ({ amount }) => moneyFormat(amount),
-        },
-        {
-          accessor: "transaction_type",
-          title: "Tipo de Transação",
-          render: ({ transaction_type }) => (
-            <Badge color={transaction_type === "withdraw" ? "green" : "red"}>
-              {transaction_type === "withdraw" ? "Saque" : "Depósito"}
-            </Badge>
-          ),
         },
         {
           accessor: "status",
           title: "Status",
+          width: 100,
           render: ({ status }) => (
-            <Badge color={transactionStatus[status].color}>
+            <Badge variant="light" color={transactionStatus[status].color}>
               {transactionStatus[status].label}
+            </Badge>
+          ),
+        },
+        {
+          accessor: "type",
+          title: "Tipo",
+          width: 100,
+          render: ({ transaction_type }) => (
+            <Badge
+              variant="transparent"
+              color={transaction_type === "deposit" ? "yellow" : "green"}
+            >
+              {transaction_type === "deposit" ? "Depósito" : "Retirada"}
             </Badge>
           ),
         },
         {
           accessor: "created_at",
           title: "Data",
+          width: 150,
           render: ({ created_at }) =>
             dayjs(created_at).format("DD/MM/YYYY HH:mm"),
         },

@@ -29,6 +29,7 @@ export default function Index() {
     name: "",
     email: "",
     phone: "",
+    cpf: "",
     active: true as boolean,
   });
 
@@ -94,6 +95,12 @@ export default function Index() {
               placeholder="E-mail do cliente"
               value={data.email}
               onChange={(e) => setData("email", e.target.value)}
+            />
+            <TextInput
+              label="CPF"
+              placeholder="CPF do cliente"
+              value={data.email}
+              onChange={(e) => setData("cpf", e.target.value)}
             />
             <TextInput
               label="Telefone"

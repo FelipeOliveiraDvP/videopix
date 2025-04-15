@@ -67,10 +67,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/balances', [BalanceController::class, 'index'])
       ->name('admin.balance');
 
-    Route::patch('/balances/{balance}/approve', [BalanceController::class, 'approve'])
+    Route::patch('/balances/{transaction}/approve', [BalanceController::class, 'approve'])
       ->name('admin.balance.approve');
 
-    Route::patch('/balances/{balance}/reject', [BalanceController::class, 'reject'])
+    Route::patch('/balances/{transaction}/reject', [BalanceController::class, 'reject'])
       ->name('admin.balance.reject');
   });
 

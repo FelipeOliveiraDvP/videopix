@@ -4,7 +4,9 @@ import { IconCancel, IconCheck, IconEye, IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { modals } from "@mantine/modals";
 import { router } from "@inertiajs/react";
-import { TransactionStatus } from "@/types";
+import { PaginatedResponse, Transaction, TransactionStatus } from "@/types";
+import { usePageProps } from "@/hooks/usePageProps";
+import { moneyFormat } from "@/Utils/moneyFormat";
 
 export const transactionStatus: Record<
   TransactionStatus,
@@ -25,6 +27,10 @@ export const transactionStatus: Record<
 };
 
 function BalanceList() {
+  const { transactions } = usePageProps<{
+    transactions: PaginatedResponse<Transaction>;
+  }>();
+
   const confirmApprove = (id: number) =>
     modals.openConfirmModal({
       title: (
@@ -66,56 +72,22 @@ function BalanceList() {
       withColumnBorders
       striped
       highlightOnHover
-      records={[
-        {
-          id: 1,
-          customer: "Lucas Oliveira",
-          type: "deposit",
-          status: "pending" as TransactionStatus,
-          amount: 100,
-          created_at: "2025-04-03 08:15:36",
-        },
-        {
-          id: 2,
-          customer: "Mariana Silva",
-          type: "withdraw",
-          status: "success" as TransactionStatus,
-          amount: 50,
-          created_at: "2025-04-04 10:30:45",
-        },
-        {
-          id: 3,
-          customer: "Carlos Souza",
-          type: "deposit",
-          status: "failed" as TransactionStatus,
-          amount: 200,
-          created_at: "2025-04-05 14:20:10",
-        },
-      ]}
+      records={transactions.data}
       columns={[
         {
           accessor: "id",
-          title: "Código",
+          title: "#",
+          width: 80,
         },
         {
-          accessor: "customer",
+          accessor: "user.name",
           title: "Cliente",
-        },
-        {
-          accessor: "type",
-          title: "Tipo de movimentação",
-          render: ({ type }) => (
-            <Badge
-              variant="transparent"
-              color={type === "deposit" ? "green" : "red"}
-            >
-              {type === "deposit" ? "Depósito" : "Retirada"}
-            </Badge>
-          ),
+          width: 200,
         },
         {
           accessor: "status",
           title: "Status",
+          width: 100,
           render: ({ status }) => (
             <Badge color={transactionStatus[status].color}>
               {transactionStatus[status].label}
@@ -123,14 +95,36 @@ function BalanceList() {
           ),
         },
         {
+          accessor: "type",
+          title: "Tipo",
+          width: 100,
+          render: ({ transaction_type }) => (
+            <Badge
+              variant="transparent"
+              color={transaction_type === "deposit" ? "green" : "red"}
+            >
+              {transaction_type === "deposit" ? "Depósito" : "Retirada"}
+            </Badge>
+          ),
+        },
+        {
+          accessor: "amount",
+          title: "Valor",
+          width: 120,
+          render: ({ amount }) => moneyFormat(amount),
+        },
+
+        {
           accessor: "created_at",
-          title: "Data do cadastro",
+          title: "Data da transação",
+          width: 150,
           render: ({ created_at }) =>
             dayjs(created_at).format("DD/MM/YYYY HH:mm"),
         },
         {
           accessor: "actions",
-          title: "Ações",
+          title: "",
+          width: 100,
           noWrap: true,
           textAlign: "right",
           render: (item) =>
