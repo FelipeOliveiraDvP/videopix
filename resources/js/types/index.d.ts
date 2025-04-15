@@ -91,6 +91,7 @@ export type PageProps<
     user_home: string;
     user_balance: number;
     user_pix: string;
+    user_package: Package;
   };
   flash: {
     success: string;

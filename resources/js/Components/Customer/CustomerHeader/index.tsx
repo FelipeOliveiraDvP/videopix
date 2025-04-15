@@ -1,9 +1,10 @@
 import { Anchor, Box, Burger, Container, Group } from "@mantine/core";
-import { Link, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import Logo from "@/Components/Logo";
 import CustomerButton from "../CustomerButton";
 import classes from "./CustomerHeader.module.css";
 import { usePageProps } from "@/hooks/usePageProps";
+import CustomerPackage from "../CustomerPackage";
 
 interface CustomerHeaderProps {
   opened: boolean;
@@ -12,6 +13,8 @@ interface CustomerHeaderProps {
 
 function CustomerHeader({ opened, toggle }: CustomerHeaderProps) {
   const { helpers } = usePageProps();
+
+  console.log("CustomerHeader", helpers);
 
   return (
     <header className={classes.header}>
@@ -34,7 +37,10 @@ function CustomerHeader({ opened, toggle }: CustomerHeaderProps) {
             </Group>
           </Box>
           <Box visibleFrom="sm">
-            <CustomerButton />
+            <Group gap="md">
+              <CustomerPackage />
+              <CustomerButton />
+            </Group>
           </Box>
         </Group>
         <Burger

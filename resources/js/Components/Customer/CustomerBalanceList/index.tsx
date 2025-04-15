@@ -10,7 +10,6 @@ function CustomerBalanceList({
 }: {
   transactions: Transaction[];
 }) {
-  console.log("BalanceList", transactions);
   return (
     <DataTable
       withTableBorder

@@ -75,7 +75,7 @@ function get_user_package()
 {
   if (Auth::user() == null) return null;
 
-  return Auth::user()->package;
+  return Auth::user()->package->first();
 }
 
 /**

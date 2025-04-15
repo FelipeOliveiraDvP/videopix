@@ -2,11 +2,13 @@ import { Anchor, Divider, Stack } from "@mantine/core";
 import { Link } from "@inertiajs/react";
 
 import CustomerButton from "../CustomerButton";
+import CustomerPackage from "../CustomerPackage";
 
 function CustomerNavbar() {
   return (
-    <Stack gap="lg" p="xl">
+    <Stack gap="lg">
       <CustomerButton />
+      <CustomerPackage />
       <Divider />
       <Stack>
         <Anchor component={Link} href={route("customer.home")}>

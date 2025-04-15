@@ -20,11 +20,11 @@ export default function Index() {
 
           <SimpleGrid
             cols={{ base: 2, md: 2, lg: 5 }}
-            spacing={{ base: 10, sm: "sm" }}
+            spacing={{ base: "sm", sm: "lg" }}
             verticalSpacing={{ base: "sm" }}
           >
             {packages.map((pack, index) => (
-              <PackageCard key={pack.id} pack={pack} index={index} />
+              <PackageCard key={pack.id} pack={pack} index={index + 1} />
             ))}
           </SimpleGrid>
         </Stack>

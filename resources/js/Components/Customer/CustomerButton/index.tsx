@@ -1,6 +1,6 @@
 import { Avatar, Group, Menu, Text, UnstyledButton } from "@mantine/core";
 import { Link } from "@inertiajs/react";
-import { IconLogout, IconStackPush } from "@tabler/icons-react";
+import { IconCoin, IconLogout, IconStackPush } from "@tabler/icons-react";
 import { moneyFormat } from "@/Utils/moneyFormat";
 import { usePageProps } from "@/hooks/usePageProps";
 
@@ -29,6 +29,13 @@ function CustomerButton() {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Item
+          component={Link}
+          href={route("customer.packages")}
+          leftSection={<IconCoin size={14} />}
+        >
+          Ver Pacotes
+        </Menu.Item>
         <Menu.Item
           component={Link}
           href={route("customer.withdraw")}

@@ -3,21 +3,36 @@ import { usePageProps } from "@/hooks/usePageProps";
 import { Package } from "@/types";
 import { moneyFormat } from "@/Utils/moneyFormat";
 import { Link } from "@inertiajs/react";
-import { Button, Card, Text, ThemeIcon, Title } from "@mantine/core";
+import {
+  Button,
+  Card,
+  lighten,
+  MantineColor,
+  parseThemeColor,
+  Text,
+  ThemeIcon,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
 import { IconCoins } from "@tabler/icons-react";
 
 function PackageCard({ pack, index }: { pack: Package; index?: number }) {
   const { auth } = usePageProps();
+  const mainColor = packageColors[index || 0] as MantineColor;
+  const theme = useMantineTheme();
+  const parsedColor = parseThemeColor({ color: mainColor, theme });
 
   return (
-    <Card>
+    <Card
+      styles={{
+        root: {
+          borderColor: mainColor,
+          boxShadow: `0px 0px 8px 3px ${lighten(parsedColor.value, 0.2)}`,
+        },
+      }}
+    >
       <Card.Section p="md">
-        <ThemeIcon
-          color={packageColors[index || 0]}
-          variant="light"
-          size={38}
-          radius="md"
-        >
+        <ThemeIcon color={mainColor} variant="light" size={38} radius="md">
           <IconCoins />
         </ThemeIcon>
       </Card.Section>
@@ -33,8 +48,8 @@ function PackageCard({ pack, index }: { pack: Package; index?: number }) {
           por semana
         </Text>
         <Button
-          variant="outline"
-          color={packageColors[index || 0]}
+          variant="filled"
+          color={mainColor}
           component={Link}
           method={auth.user?.role === "admin" ? "get" : "post"}
           href={
