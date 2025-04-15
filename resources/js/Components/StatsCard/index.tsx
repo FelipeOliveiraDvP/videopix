@@ -1,3 +1,4 @@
+import { packageColors } from "@/constants";
 import { Group, MantineColor, Paper, Text, ThemeIcon } from "@mantine/core";
 import {
   IconCoin,
@@ -17,11 +18,13 @@ type StatType =
   | "withdrawals"
   | "invites"
   | "conversion"
-  | "packages";
+  | "packages"
+  | "subscribe";
 
 interface StatsCardProps {
   value: string;
   type: StatType;
+  packageId?: number;
 }
 
 const stats: Record<
@@ -63,9 +66,17 @@ const stats: Record<
     icon: <IconPackage size={28} stroke={1.5} />,
     color: "violet",
   },
+  subscribe: {
+    title: "Você ainda não tem pacote",
+    icon: <IconPackage size={28} stroke={1.5} />,
+    color: "gray",
+  },
 };
 
-function StatsCard({ type, value }: StatsCardProps) {
+function StatsCard({ type, value, packageId }: StatsCardProps) {
+  const isPackage = !!packageId;
+  const packageColor = packageColors[isPackage ? packageId : 0] as MantineColor;
+
   return (
     <Paper withBorder p={{ base: "sm", md: "md" }} radius="md">
       <Group justify="space-between" align="start">
@@ -78,7 +89,7 @@ function StatsCard({ type, value }: StatsCardProps) {
           </Text>
         </div>
         <ThemeIcon
-          color={stats[type].color}
+          color={isPackage ? packageColor : stats[type].color}
           variant="light"
           size={38}
           radius="md"

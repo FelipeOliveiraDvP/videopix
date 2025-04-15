@@ -79,7 +79,12 @@ class VideoController extends Controller
    */
   public function customerVideos(): Response
   {
+    $views_count = UserVideo::where('user_id', Auth::id())
+      ->where('watched', true)
+      ->count();
+
     return Inertia::render('Customer/Home', [
+      'views_count' => $views_count,
       'watched' => Auth::user()
         ->watchedVideos()
         ->orderBy('user_videos.watched_at', 'desc')
