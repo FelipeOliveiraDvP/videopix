@@ -109,6 +109,7 @@ export default function UpdateProfileInformation({
               placeholder="Informe a chave onde você quer receber o pagamento"
               value={data.pix}
               onChange={(e) => setData("pix", e.target.value)}
+              readOnly={user.role === "customer"}
               error={errors.pix}
             />
 
