@@ -11,8 +11,21 @@ import {
 import AdminLayout from "@/Layouts/AdminLayout";
 import StatsCard from "@/Components/StatsCard";
 import { packageColors } from "@/constants";
+import { usePageProps } from "@/hooks/usePageProps";
+import { Dashboard as DashboardProps } from "@/types";
 
 export default function Dashboard() {
+  const {
+    totalDeposits,
+    totalWithdrawals,
+    totalVideosWatched,
+    depositLast6Months,
+    withdrawalsLast6Months,
+    balanceLast12Months,
+    depositsByPackage,
+    clientsByPackage,
+  } = usePageProps<DashboardProps>();
+
   return (
     <AdminLayout>
       <Head title="Dashboard" />
@@ -23,11 +36,11 @@ export default function Dashboard() {
           spacing={{ base: 10, sm: "lg" }}
           verticalSpacing={{ base: "lg" }}
         >
-          <StatsCard type="deposits" value="R$ 112k" />
-          <StatsCard type="withdrawals" value="R$ 86k" />
-          <StatsCard type="invites" value="1257" />
-          <StatsCard type="conversion" value="35%" />
-          <StatsCard type="views" value="1.1mi" />
+          <StatsCard type="deposits" value={moneyFormat(totalDeposits)} />
+          <StatsCard type="withdrawals" value={moneyFormat(totalWithdrawals)} />
+          <StatsCard type="invites" value="0" />
+          <StatsCard type="conversion" value="0%" />
+          <StatsCard type="views" value={`${totalVideosWatched}`} />
         </SimpleGrid>
         <Grid>
           <Grid.Col
@@ -46,7 +59,7 @@ export default function Dashboard() {
                   </Title>
                   <AreaChart
                     h={300}
-                    data={dummyAverageDeposits}
+                    data={depositLast6Months}
                     dataKey="date"
                     series={[{ name: "total", color: "green" }]}
                     curveType="natural"
@@ -59,7 +72,7 @@ export default function Dashboard() {
                   </Title>
                   <AreaChart
                     h={300}
-                    data={dummyAverageWithdraws}
+                    data={withdrawalsLast6Months}
                     dataKey="date"
                     series={[{ name: "total", color: "red" }]}
                     curveType="natural"
@@ -72,7 +85,7 @@ export default function Dashboard() {
                 </Title>
                 <AreaChart
                   h={300}
-                  data={[...dummyAverageWithdraws, ...dummyAverageDeposits]}
+                  data={balanceLast12Months}
                   dataKey="date"
                   series={[{ name: "total", color: "blue" }]}
                   curveType="natural"
@@ -90,8 +103,9 @@ export default function Dashboard() {
                   <DonutChart
                     size={250}
                     thickness={30}
-                    data={dummyDepositsByPackage.map((item, index) => ({
-                      ...item,
+                    data={depositsByPackage.map((item, index) => ({
+                      name: item.package,
+                      value: item.total,
                       color: packageColors[index],
                     }))}
                     chartLabel="Depósitos por pacote"
@@ -103,8 +117,9 @@ export default function Dashboard() {
                   <DonutChart
                     size={250}
                     thickness={30}
-                    data={dummyCustomersByPackage.map((item, index) => ({
-                      ...item,
+                    data={clientsByPackage.map((item, index) => ({
+                      name: item.package,
+                      value: item.total,
                       color: packageColors[index],
                     }))}
                     chartLabel="Clientes por pacote"

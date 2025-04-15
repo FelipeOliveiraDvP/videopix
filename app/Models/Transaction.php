@@ -46,4 +46,12 @@ class Transaction extends Model
   {
     return $this->belongsTo(User::class);
   }
+
+  /**
+   * Get the package that this transaction is related to.
+   */
+  public function item()
+  {
+    return $this->belongsTo(Package::class, 'item_id');
+  }
 }

@@ -70,6 +70,17 @@ export type TransactionType = "deposit" | "withdraw";
 
 export type TransactionStatus = "completed" | "pending" | "failed";
 
+export interface Dashboard {
+  totalDeposits: number;
+  totalWithdrawals: number;
+  totalVideosWatched: number;
+  depositLast6Months: Array<{ date: string; total: number }>;
+  withdrawalsLast6Months: Array<{ date: string; total: number }>;
+  balanceLast12Months: Array<{ date: string; total: number }>;
+  depositsByPackage: Array<{ package: string; total: number }>;
+  clientsByPackage: Array<{ package: string; total: number }>;
+}
+
 export type PageProps<
   T extends Record<string, unknown> = Record<string, unknown>
 > = T & {
