@@ -23,18 +23,8 @@ jobs:
 
       - name: Deploy na VPS
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-            set -e
-
-            PROJECT_DIR=~/sites/videopix
-
-            # Clona se não existir
-            if [ ! -d "$PROJECT_DIR" ]; then
-              mkdir -p $(dirname $PROJECT_DIR)
-              git clone https://github.com/${{ github.repository }} $PROJECT_DIR
-            fi
-
-            cd $PROJECT_DIR
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+            cd ~/sites/videopix
             git pull origin main
 
             echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
