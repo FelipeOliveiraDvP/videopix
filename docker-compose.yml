@@ -24,6 +24,8 @@ services:
     image: mysql:8.0.36
     container_name: videopix-mysql
     restart: unless-stopped
+    ports:
+      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     environment:
