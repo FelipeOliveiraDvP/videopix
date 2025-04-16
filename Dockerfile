@@ -34,8 +34,7 @@ COPY --from=node-build /var/www/resources ./resources
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN cp .env .env \
-  && php artisan key:generate \
+RUN php artisan key:generate \
   && php artisan config:cache \
   && php artisan route:cache \
   && php artisan view:cache \
