@@ -17,8 +17,6 @@ RUN pnpm build
 
 FROM php:8.3-fpm
 
-ARG ENV_FILE=.env.production
-
 RUN apt-get update && apt-get install -y \
   git curl libpng-dev libonig-dev libxml2-dev zip unzip \
   libzip-dev libpq-dev libjpeg-dev libfreetype6-dev \
