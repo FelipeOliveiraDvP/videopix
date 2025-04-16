@@ -20,9 +20,9 @@ FROM php:8.3-fpm
 ARG ENV_FILE=.env.production
 
 RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libonig-dev libxml2-dev zip unzip \
-    libzip-dev libpq-dev libjpeg-dev libfreetype6-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd
+  git curl libpng-dev libonig-dev libxml2-dev zip unzip \
+  libzip-dev libpq-dev libjpeg-dev libfreetype6-dev \
+  && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd
 
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 COPY ${ENV_FILE} /var/www/.env
@@ -36,15 +36,15 @@ COPY --from=node-build /var/www/resources ./resources
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN cp .env.production .env \
-    && php artisan key:generate \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache \
-    && php artisan storage:link
+RUN cp .env .env \
+  && php artisan key:generate \
+  && php artisan config:cache \
+  && php artisan route:cache \
+  && php artisan view:cache \
+  && php artisan storage:link
 
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage /var/www/bootstrap/cache
+  && chmod -R 755 /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 9000
 
