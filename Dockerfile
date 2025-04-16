@@ -33,7 +33,7 @@ COPY . .
 COPY --from=node-build /var/www/public/build ./public/build
 COPY --from=node-build /var/www/resources ./resources
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install
 
 # Comando Artisan e permissões
 RUN php artisan key:generate \
