@@ -10,8 +10,6 @@ services:
     image: videopix-app
     container_name: videopix-app
     restart: unless-stopped
-    volumes:
-      - .:/var/www
     networks:
       - videopix
     depends_on:
