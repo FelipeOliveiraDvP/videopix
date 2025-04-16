@@ -23,17 +23,24 @@ RUN apt-get update && apt-get install -y \
   && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl bcmath gd
 
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
-COPY ${ENV_FILE} /var/www/.env
 
 WORKDIR /var/www
 
+# Copia primeiro os arquivos necessários para o composer
+COPY composer.json composer.lock ./
+
+# Instala as dependências antes de copiar o restante do projeto
+RUN composer install --no-dev --optimize-autoloader
+
+# Agora copia o restante do projeto (mantendo a ordem correta)
 COPY . .
+
+COPY ${ENV_FILE} .env
 
 COPY --from=node-build /var/www/public ./public
 COPY --from=node-build /var/www/resources ./resources
 
-RUN composer install --no-dev --optimize-autoloader
-
+# Comando Artisan e permissões
 RUN php artisan key:generate \
   && php artisan config:cache \
   && php artisan route:cache \
