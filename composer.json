@@ -7,10 +7,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.9",
         "inertiajs/inertia-laravel": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
+        "laravellegends/pt-br-validator": "^12.0",
+        "nyholm/psr7": "^1.8",
+        "railsware/mailtrap-php": "^2.1",
+        "sendinblue/api-v3-sdk": "8.x.x",
+        "symfony/http-client": "^7.2",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
@@ -19,6 +25,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
+        "lucascudo/laravel-pt-br-localization": "^3.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "phpunit/phpunit": "^11.5.3"

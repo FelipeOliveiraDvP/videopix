@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\VideoRequest;
+use App\Http\Resources\VideoResource;
+use App\Models\UserVideo;
+use App\Models\Video;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class VideoController extends Controller
 {
@@ -15,7 +21,9 @@ class VideoController extends Controller
    */
   public function index(): Response
   {
-    return Inertia::render('Admin/Videos/Index');
+    return Inertia::render('Admin/Videos/Index', [
+      'videos' => Video::orderBy('created_at', 'desc')->paginate(),
+    ]);
   }
 
   /**
@@ -27,35 +35,43 @@ class VideoController extends Controller
   }
 
   /**
-   * Show the form to edit a specific video.
+   * Store a new video.
    */
-  public function edit(): Response
+  public function store(VideoRequest $request): RedirectResponse
   {
-    return Inertia::render('Admin/Videos/Edit');
+    Video::create($request->validated());
+
+    return Redirect::route('admin.videos.index')->with('success', 'Video criado com sucesso!');
   }
 
   /**
-   * Store a new video.
+   * Show the form to edit a specific video.
    */
-  public function store(): Response
+  public function edit(Video $video): Response
   {
-    return Inertia::render('Admin/Videos/Index');
+    return Inertia::render('Admin/Videos/Edit', [
+      'video' => new VideoResource($video),
+    ]);
   }
 
   /**
    * Update an existing video.
    */
-  public function update(): Response
+  public function update(Video $video, VideoRequest $request): RedirectResponse
   {
-    return Inertia::render('Admin/Videos/Edit');
+    $video->update($request->validated());
+
+    return Redirect::route('admin.videos.index')->with('success', 'Video atualizado com sucesso!');
   }
 
   /**
    * Destroy an existing video.
    */
-  public function destroy(): Response
+  public function destroy(Video $video): RedirectResponse
   {
-    return Inertia::render('Admin/Videos/Index');
+    $video->delete();
+
+    return Redirect::back()->with('success', 'Video removido com sucesso.');
   }
 
   /**
@@ -63,30 +79,79 @@ class VideoController extends Controller
    */
   public function customerVideos(): Response
   {
-    return Inertia::render('Customer/Home');
+    $views_count = UserVideo::where('user_id', Auth::id())
+      ->where('watched', true)
+      ->count();
+
+    return Inertia::render('Customer/Home', [
+      'views_count' => $views_count,
+      'watched' => Auth::user()
+        ->watchedVideos()
+        ->orderBy('user_videos.watched_at', 'desc')
+        ->paginate(),
+      'videos' => Auth::user()
+        ->unwatchedVideos()
+        ->orderBy('created_at', 'desc')
+        ->paginate(),
+    ]);
   }
 
   /**
    * Display the watch page for a specific video.
    */
-  public function watch(): Response
+  public function watch(Video $video): Response
   {
-    return Inertia::render('Customer/Watch');
+    UserVideo::updateOrCreate(
+      ['user_id' => Auth::id(), 'video_id' => $video->id],
+      ['watched_at' => now()]
+    );
+
+    $watched_video = Auth::user()
+      ->watchedVideos()
+      ->withPivot('watched_time')
+      ->where('video_id', $video->id)
+      ->firstOrFail();
+
+    return Inertia::render('Customer/Watch', [
+      'video' => new VideoResource($watched_video),
+      'videos' => Auth::user()
+        ->unwatchedVideos()
+        ->orderBy('created_at', 'desc')
+        ->paginate(),
+    ]);
   }
 
   /**
    * Update the progress of a specific video.
    */
-  public function progress(): Response
+  public function progress(Request $request, Video $video): RedirectResponse
   {
-    return Inertia::render('Customer/Watch');
+    $request->validate([
+      'watched_time' => 'required|integer|min:0',
+    ]);
+
+    $user = $request->user();
+
+    $user->watchedVideos()->syncWithoutDetaching([
+      $video->id => ['watched_time' => $request->watched_time],
+    ]);
+
+    return Redirect::back();
   }
 
   /**
    * Mark a specific video as watched.
    */
-  public function watched(): Response
+  public function watched(Request $request, Video $video): RedirectResponse
   {
-    return Inertia::render('Customer/Watch');
+    $user = $request->user();
+
+    $user->watchedVideos()->syncWithoutDetaching([
+      $video->id => ['watched' => true],
+    ]);
+
+    $user->balance->add($video->price);
+
+    return Redirect::route('customer.home');
   }
 }

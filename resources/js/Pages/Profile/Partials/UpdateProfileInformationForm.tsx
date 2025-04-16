@@ -3,6 +3,7 @@ import {
   Alert,
   Anchor,
   Button,
+  InputBase,
   Paper,
   Stack,
   Text,
@@ -12,6 +13,8 @@ import {
 import { DateInput } from "@mantine/dates";
 import { FormEventHandler } from "react";
 import dayjs from "dayjs";
+import { usePageProps } from "@/hooks/usePageProps";
+import { IMaskInput } from "react-imask";
 
 export default function UpdateProfileInformation({
   mustVerifyEmail,
@@ -22,16 +25,18 @@ export default function UpdateProfileInformation({
   status?: string;
   className?: string;
 }) {
-  const user = usePage().props.auth.user;
+  const {
+    auth: { user },
+  } = usePageProps();
 
   const { data, setData, patch, errors, processing, recentlySuccessful } =
     useForm({
       name: user.name,
       email: user.email,
-      cpf: user.cpf,
-      phone: user.phone,
-      birth_date: user.birth_date,
-      pix: user.pix,
+      cpf: user.customer?.cpf,
+      phone: user.customer?.phone,
+      birth_date: user.customer?.birth_date,
+      pix: user.customer?.pix,
     });
 
   const submit: FormEventHandler = (e) => {
@@ -67,18 +72,13 @@ export default function UpdateProfileInformation({
               onChange={(e) => setData("email", e.target.value)}
               error={errors.email}
             />
-            <TextInput
-              label="CPF"
-              placeholder="000.000.000-00"
-              value={data.cpf}
-              onChange={(e) => setData("cpf", e.target.value)}
-              error={errors.cpf}
-            />
-            <TextInput
+            <InputBase
               label="Telefone"
               placeholder="(00) 00000-0000"
+              component={IMaskInput}
+              mask="(00) 00000-0000"
               value={data.phone}
-              onChange={(e) => setData("phone", e.target.value)}
+              onChange={(e) => setData("phone", e.currentTarget.value)}
               error={errors.phone}
             />
             <DateInput
@@ -95,11 +95,21 @@ export default function UpdateProfileInformation({
               }
               error={errors.birth_date}
             />
+            <InputBase
+              label="CPF"
+              placeholder="000.000.000-00"
+              component={IMaskInput}
+              mask="000.000.000-00"
+              value={data.cpf}
+              onChange={(e) => setData("cpf", e.currentTarget.value)}
+              error={errors.cpf}
+            />
             <TextInput
               label="Chave PIX"
               placeholder="Informe a chave onde você quer receber o pagamento"
               value={data.pix}
               onChange={(e) => setData("pix", e.target.value)}
+              readOnly={user.role === "customer"}
               error={errors.pix}
             />
 
@@ -138,7 +148,7 @@ export default function UpdateProfileInformation({
         </form>
         {recentlySuccessful && (
           <Alert title="Sucesso!" color="green" variant="outline" radius="md">
-            Salvo
+            Informações atualizadas com sucesso.
           </Alert>
         )}
       </Stack>

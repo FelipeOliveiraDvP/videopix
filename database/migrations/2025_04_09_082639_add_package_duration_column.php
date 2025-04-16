@@ -11,11 +11,8 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('posts', function (Blueprint $table) {
-      $table->id();
-      $table->string('title');
-      $table->text('body');
-      $table->timestamps();
+    Schema::table('packages', function ($table) {
+      $table->integer('duration_in_months')->after('price')->default(0)->comment('Duration in months');
     });
   }
 
@@ -24,6 +21,8 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('posts');
+    Schema::table('packages', function (Blueprint $table) {
+      $table->dropColumn('duration_in_months');
+    });
   }
 };

@@ -1,21 +1,22 @@
 import { PropsWithChildren } from "react";
-import { AppShell, Burger, Group, Tabs, Text } from "@mantine/core";
+import { Alert, AppShell, Container, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconPhoto,
-  IconMessageCircle,
-  IconSettings,
-} from "@tabler/icons-react";
 import Providers from "@/Providers";
-import Logo from "@/Components/Logo";
+import CustomerHeader from "@/Components/Customer/CustomerHeader";
+import CustomerNavbar from "@/Components/Customer/CustomerNavbar";
+import { usePageProps } from "@/hooks/usePageProps";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export default function CustomerLayout({ children }: PropsWithChildren) {
   const [opened, { toggle }] = useDisclosure();
+  const {
+    flash: { error, success },
+  } = usePageProps();
 
   return (
     <Providers>
       <AppShell
-        header={{ height: 60 }}
+        header={{ height: { base: 60, md: 70, lg: 80 } }}
         navbar={{
           width: 300,
           breakpoint: "sm",
@@ -24,53 +25,41 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
         padding="md"
       >
         <AppShell.Header>
-          <Group h="100%" px="md">
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-            />
-            <Group justify="space-between" style={{ flex: 1 }}>
-              <Logo />
-              <Group ml="xl" gap={0} visibleFrom="sm">
-                Informações do cliente
-              </Group>
-            </Group>
-          </Group>
+          <CustomerHeader opened={opened} toggle={toggle} />
         </AppShell.Header>
 
-        <AppShell.Navbar py="md" px={4}>
-          Informações do cliente
+        <AppShell.Navbar p="xl">
+          <CustomerNavbar />
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Tabs defaultValue="gallery">
-            <Tabs.List>
-              <Tabs.Tab value="gallery" leftSection={<IconPhoto size={12} />}>
-                Gallery
-              </Tabs.Tab>
-              <Tabs.Tab
-                value="messages"
-                leftSection={<IconMessageCircle size={12} />}
-              >
-                Messages
-              </Tabs.Tab>
-              <Tabs.Tab
-                value="settings"
-                leftSection={<IconSettings size={12} />}
-              >
-                Settings
-              </Tabs.Tab>
-            </Tabs.List>
-
-            <Tabs.Panel value="gallery">Gallery tab content</Tabs.Panel>
-
-            <Tabs.Panel value="messages">Messages tab content</Tabs.Panel>
-
-            <Tabs.Panel value="settings">Settings tab content</Tabs.Panel>
-          </Tabs>
-          {children}
+          <Container py="lg">
+            <Stack mb="md">
+              {error && (
+                <Alert
+                  variant="light"
+                  color="red"
+                  withCloseButton
+                  title="Algum erro ocorreu"
+                  icon={<IconInfoCircle />}
+                >
+                  {error}
+                </Alert>
+              )}
+              {success && (
+                <Alert
+                  variant="light"
+                  color="green"
+                  withCloseButton
+                  title="Sucesso"
+                  icon={<IconInfoCircle />}
+                >
+                  {success}
+                </Alert>
+              )}
+              {children}
+            </Stack>
+          </Container>
         </AppShell.Main>
       </AppShell>
     </Providers>

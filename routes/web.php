@@ -9,7 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WithdrawController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified'])->group(function () {
   // Admin Routes
@@ -22,17 +21,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/customers', [CustomerController::class, 'index'])
       ->name('admin.customers.index');
 
+    Route::post('/customers/invite', [CustomerController::class, 'invite'])
+      ->name('admin.customers.invite');
+
     Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])
       ->name('admin.customers.edit');
 
-    Route::post('/customers', [CustomerController::class, 'store'])
-      ->name('admin.customers.store');
-
-    Route::post('/customers/{customer}', [CustomerController::class, 'update'])
+    Route::put('/customers/{customer}', [CustomerController::class, 'update'])
       ->name('admin.customers.update');
 
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
       ->name('admin.customers.destroy');
+
 
     // Packages
     Route::get('/packages', [PackageController::class, 'index'])
@@ -57,7 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/videos/{video}/edit', [VideoController::class, 'edit'])
       ->name('admin.videos.edit');
 
-    Route::post('/videos/{video}', [VideoController::class, 'update'])
+    Route::put('/videos/{video}', [VideoController::class, 'update'])
       ->name('admin.videos.update');
 
     Route::delete('/videos/{video}', [VideoController::class, 'destroy'])
@@ -67,10 +67,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/balances', [BalanceController::class, 'index'])
       ->name('admin.balance');
 
-    Route::patch('/balances/{balance}/approve', [BalanceController::class, 'approve'])
+    Route::patch('/balances/{transaction}/approve', [BalanceController::class, 'approve'])
       ->name('admin.balance.approve');
 
-    Route::patch('/balances/{balance}/reject', [BalanceController::class, 'reject'])
+    Route::patch('/balances/{transaction}/reject', [BalanceController::class, 'reject'])
       ->name('admin.balance.reject');
   });
 
@@ -90,8 +90,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
       ->name('customer.videos.watched');
 
     // Balance
-    Route::get('/balances', [BalanceController::class, 'index'])
+    Route::get('/balances', [BalanceController::class, 'customerBalance'])
       ->name('customer.balance');
+
+    // Packages
+    Route::get('/packages', [PackageController::class, 'customerPackages'])
+      ->name('customer.packages');
 
     // Withdraw
     Route::get('/withdraw', [WithdrawController::class, 'index'])
@@ -103,22 +107,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/withdraw/thank-you', [WithdrawController::class, 'thankYou'])
       ->name('customer.withdraw.success');
 
-    // Packages
-    Route::get('/packages', [PackageController::class, 'index'])
-      ->name('customer.packages');
-
     // Checkout
-    Route::get('/checkout/{package}', [CheckoutController::class, 'index'])
-      ->name('customer.checkout');
+    Route::post('/checkout/{package}', [CheckoutController::class, 'store'])
+      ->name('customer.checkout.store');
+
+    Route::get('/checkout/{package}', [CheckoutController::class, 'edit'])
+      ->name('customer.checkout.edit');
+
+    Route::post('/checkout/{package}/status', [CheckoutController::class, 'status'])
+      ->name('customer.checkout.status');
 
     Route::get('/checkout/{package}/success', [CheckoutController::class, 'thankYou'])
       ->name('customer.checkout.success');
   });
 
   // Profile
-  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-  Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-  Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+  Route::get('/profile', [ProfileController::class, 'edit'])
+    ->name('profile.edit');
+
+  Route::patch('/profile', [ProfileController::class, 'update'])
+    ->name('profile.update');
+
+  Route::delete('/profile', [ProfileController::class, 'destroy'])
+    ->name('profile.destroy');
 });
 
 // TODO: Public route for payment gateway

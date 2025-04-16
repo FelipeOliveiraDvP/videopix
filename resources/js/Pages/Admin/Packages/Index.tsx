@@ -1,12 +1,34 @@
+import { Head, usePage } from "@inertiajs/react";
+import { Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Package } from "@/types";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Head } from "@inertiajs/react";
+import PackageCard from "@/Components/Packages/PackageCard";
 
 export default function Index() {
+  const { packages } = usePage<{ packages: Package[] }>().props;
+
   return (
     <AdminLayout>
       <Head title="Listar Pacotes" />
 
-      <div>Listar Pacotes</div>
+      <Paper>
+        <Stack>
+          <div>
+            <Title order={2}>Pacotes</Title>
+            <Text>Gerencie os pacotes cadastrados na plataforma..</Text>
+          </div>
+
+          <SimpleGrid
+            cols={{ base: 2, md: 2, lg: 5 }}
+            spacing={{ base: "sm", sm: "lg" }}
+            verticalSpacing={{ base: "sm" }}
+          >
+            {packages.map((pack, index) => (
+              <PackageCard key={pack.id} pack={pack} index={index + 1} />
+            ))}
+          </SimpleGrid>
+        </Stack>
+      </Paper>
     </AdminLayout>
   );
 }

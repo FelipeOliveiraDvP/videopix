@@ -11,8 +11,9 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::table('users', function (Blueprint $table) {
-      $table->enum('role', ['admin', 'customer']);
+    Schema::table('transactions', function (Blueprint $table) {
+      $table->text('pix_code')->after('external_id')->nullable();
+      $table->text('pix_qrcode')->after('pix_code')->nullable();
     });
   }
 
@@ -21,8 +22,9 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::table('users', function (Blueprint $table) {
-      $table->dropColumn('role');
+    Schema::table('transactions', function (Blueprint $table) {
+      $table->dropColumn('pix_code');
+      $table->dropColumn('pix_qrcode');
     });
   }
 };

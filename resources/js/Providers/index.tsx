@@ -6,6 +6,7 @@ import {
   MantineProvider,
   Paper,
 } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 
 const theme = createTheme({
   primaryShade: 8,
@@ -26,7 +27,8 @@ const theme = createTheme({
   components: {
     Anchor: Anchor.extend({
       defaultProps: {
-        c: "primary",
+        fw: "bold",
+        c: "gray.0",
       },
     }),
     Button: Button.extend({
@@ -47,7 +49,7 @@ const theme = createTheme({
 export default function Providers({ children }: { children: ReactNode }) {
   return (
     <MantineProvider defaultColorScheme="dark" theme={theme}>
-      {children}
+      <ModalsProvider>{children}</ModalsProvider>
     </MantineProvider>
   );
 }
