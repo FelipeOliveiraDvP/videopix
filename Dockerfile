@@ -28,7 +28,7 @@ WORKDIR /var/www
 
 COPY . .
 
-COPY ${ENV_FILE} .env
+# COPY ${ENV_FILE} .env
 
 COPY --from=node-build /var/www/public ./public
 COPY --from=node-build /var/www/resources ./resources
