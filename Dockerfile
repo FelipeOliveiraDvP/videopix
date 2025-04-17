@@ -33,6 +33,7 @@ COPY . .
 # COPY ${ENV_FILE} .env
 
 COPY --from=node-build /var/www/public/build ./public/build
+COPY --from=node-build /var/www/public/build/.vite/manifest.json ./public/build/manifest.json
 COPY --from=node-build /var/www/resources ./resources
 
 RUN composer install
