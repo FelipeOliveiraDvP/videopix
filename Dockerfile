@@ -8,6 +8,8 @@ COPY postcss.config.js ./
 COPY tsconfig.json ./
 COPY vite.config.js ./
 COPY resources ./resources
+COPY public ./public
+COPY .env .env
 
 ENV NODE_ENV=production
 
