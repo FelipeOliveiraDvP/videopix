@@ -24,8 +24,5 @@ class AppServiceProvider extends ServiceProvider
   {
     JsonResource::withoutWrapping();
     Vite::prefetch(concurrency: 3);
-    if (app()->environment('production')) {
-      URL::forceScheme('https');
-    }
   }
 }
