@@ -23,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
     $middleware->alias([
       'role' => \App\Http\Middleware\RoleMiddleware::class,
     ]);
+
+    $middleware->trustProxies(at: '*');
   })
   ->withExceptions(function (Exceptions $exceptions) {
     $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
