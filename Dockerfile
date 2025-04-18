@@ -1,15 +1,17 @@
 FROM node:20-alpine as node-build
 WORKDIR /var/www
 
-COPY package*.json ./
-COPY pnpm*.yaml ./
-COPY vite.config.* ./
-COPY postcss.config.js ./
-COPY tsconfig.json ./
-COPY vite.config.js ./
-COPY resources ./resources
-COPY public ./public
-COPY .env .env
+# COPY package*.json ./
+# COPY pnpm*.yaml ./
+# COPY vite.config.* ./
+# COPY postcss.config.js ./
+# COPY tsconfig.json ./
+# COPY vite.config.js ./
+# COPY resources ./resources
+# COPY public ./public
+# COPY .env .env
+
+COPY . .
 
 ENV NODE_ENV=production
 

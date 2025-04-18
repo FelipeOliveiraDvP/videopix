@@ -57,7 +57,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - .:/var/www
+      #- .:/var/www
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - app
