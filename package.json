@@ -19,8 +19,8 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "mantine-datatable": "^7.17.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-imask": "^7.6.1",
     "react-player": "^2.16.0",
     "recharts": "^2.15.1"
@@ -28,8 +28,8 @@
   "devDependencies": {
     "@inertiajs/react": "^2.0.0",
     "@types/node": "^18.13.0",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.10",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.12",
     "axios": "^1.8.2",

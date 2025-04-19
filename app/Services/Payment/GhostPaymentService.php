@@ -53,21 +53,19 @@ class GhostPaymentService implements PaymentService
         'Authorization' => $api_key,
         'Content-Type' => 'application/json',
       ])->post($api_url, [
-        'json' => [
-          'name' => $customer['name'],
-          'email' => $customer['email'],
-          'phone' => only_numbers($customer['phone']),
-          'cpf' => only_numbers($customer['cpf']),
-          'paymentMethod' => 'PIX',
-          'amount' => $amount,
-          'items' => [
-            [
-              'title' => $item['title'] ?? 'Sem título',
-              'quantity' => 1,
-              'unitPrice' => $amount,
-              'tangible' => false,
-            ]
-          ],
+        'name' => $customer['name'],
+        'email' => $customer['email'],
+        'phone' => only_numbers($customer['phone']),
+        'cpf' => only_numbers($customer['cpf']),
+        'paymentMethod' => 'PIX',
+        'amount' => $amount,
+        'items' => [
+          [
+            'title' => $item['title'] ?? 'Sem título',
+            'quantity' => 1,
+            'unitPrice' => $amount,
+            'tangible' => false,
+          ]
         ],
       ]);
 
@@ -101,7 +99,7 @@ class GhostPaymentService implements PaymentService
     } catch (Exception $e) {
       Log::error('Failed to create transaction', [
         'error' => $e->getMessage(),
-        'amount' => $amount,
+        'amount' => $amount * 100,
         'customer' => $customer,
         'item' => $item,
       ]);

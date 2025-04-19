@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
       >
         <AppShell.Header>
           <Group h="100%" px="md" justify="space-between">
-            <Link href={route(helpers.user_home)}>
+            <Link href={route("customer.home")}>
               <Logo variant="white" width={48} />
             </Link>
             <Burger
