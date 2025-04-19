@@ -14,13 +14,11 @@ interface CustomerHeaderProps {
 function CustomerHeader({ opened, toggle }: CustomerHeaderProps) {
   const { helpers } = usePageProps();
 
-  console.log("CustomerHeader", helpers);
-
   return (
     <header className={classes.header}>
       <Container className={classes.inner}>
         <Group justify="space-between" align="center" w="100%">
-          <Link href={route(helpers.user_home)} className={classes.logo}>
+          <Link href={route("customer.home")} className={classes.logo}>
             <Logo variant="white" width={64} />
           </Link>
           <Box visibleFrom="sm">

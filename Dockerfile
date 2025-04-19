@@ -1,17 +1,15 @@
 FROM node:20-alpine as node-build
 WORKDIR /var/www
 
-# COPY package*.json ./
-# COPY pnpm*.yaml ./
-# COPY vite.config.* ./
-# COPY postcss.config.js ./
-# COPY tsconfig.json ./
-# COPY vite.config.js ./
-# COPY resources ./resources
-# COPY public ./public
-# COPY .env .env
-
-COPY . .
+COPY package*.json ./
+COPY pnpm*.yaml ./
+COPY vite.config.* ./
+COPY postcss.config.js ./
+COPY tsconfig.json ./
+COPY vite.config.js ./
+COPY resources ./resources
+COPY public ./public
+COPY .env .env
 
 ENV NODE_ENV=production
 
@@ -36,7 +34,6 @@ COPY . .
 
 #COPY --from=node-build /var/www/public/build ./public/build
 COPY --from=node-build /var/www/public ./public
-COPY --from=node-build /var/www/public/build/.vite/manifest.json ./public/build/manifest.json
 COPY --from=node-build /var/www/resources ./resources
 
 RUN composer install
