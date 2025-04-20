@@ -36,13 +36,6 @@ jobs:
             echo "👉 Garantindo .env atualizado..."
             echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
 
-            echo "👉 Instalando dependências do frontend (Vite)..."
-            command -v pnpm >/dev/null 2>&1 || npm install -g pnpm
-            pnpm install && pnpm build
-
-            echo "👉 Instalando dependências do backend (Laravel)..."
-            composer install --no-dev --optimize-autoloader
-
             echo "👉 Subindo containers atualizados..."
             docker-compose down
             docker-compose up -d --build
