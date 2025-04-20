@@ -23,12 +23,19 @@ jobs:
 
       - name: Deploy na VPS
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            set -e
             cd ~/sites/videopix
+
+            echo "👉 Limpando imagens antigas..."
+            docker rmi -f videopix-app nginx:1.25.3 || true
+
+            echo "👉 Atualizando código..."
             git pull origin main
 
             echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
 
+            echo "👉 Subindo containers atualizados..."
             docker-compose down
             docker-compose up -d --build
           EOF
