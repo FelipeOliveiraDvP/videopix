@@ -33,6 +33,15 @@ jobs:
             echo "👉 Atualizando código..."
             git pull origin main
 
+            echo "👉 Instalando dependências do frontend (Vite)..."
+            cd /sites/videopix
+            pnpm install
+            pnpm build
+
+            echo "👉 Instalando dependências do backend (Laravel)..."
+            cd /sites/videopix
+            composer install --no-dev --optimize-autoloader
+
             echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
 
             echo "👉 Subindo containers atualizados..."
