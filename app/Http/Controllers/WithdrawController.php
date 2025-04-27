@@ -56,10 +56,11 @@ class WithdrawController extends Controller
       'amount.min' => 'O valor do saque deve ser maior que R$ 0,01',
     ]);
 
-    $user_balance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
     $request_amount = $request->input('amount');
+    $user_balance = Auth::user()->balance ? Auth::user()->balance->amount : 0;
+    $package_limit = (get_user_package()->withdraw_percentage * get_user_package()->price) ?? 0;
 
-    if ($request_amount > $user_balance) {
+    if ($request_amount > $user_balance && $request_amount < $package_limit) {
       return Redirect::route('customer.withdraw')
         ->with('error', 'Você não tem saldo suficiente para fazer o saque.');
     }

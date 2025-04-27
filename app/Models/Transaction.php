@@ -40,7 +40,7 @@ class Transaction extends Model
   }
 
   /**
-   * Get the users who watched this video.
+   * Get the user that this transaction is related to.
    */
   public function user()
   {

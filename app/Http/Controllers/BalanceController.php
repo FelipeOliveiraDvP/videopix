@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\WithdrawApprovedEmail;
+use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\UserVideo;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 
 class BalanceController extends Controller
@@ -38,6 +42,18 @@ class BalanceController extends Controller
         'status' => 'completed',
       ]);
       $transaction->user->balance->subtract($transaction->amount);
+
+      // if (App::environment('production')) {
+      $customer = Customer::where('user_id', $transaction->user_id)->first();
+      $amount = $transaction->amount;
+      $deposit_date = now();
+
+      Mail::to($customer->user->email)->send(new WithdrawApprovedEmail(
+        $customer,
+        $amount,
+        $deposit_date
+      ));
+      // }
 
       return Redirect::route('admin.balance')
         ->with('success', 'Saque aprovado com sucesso.');

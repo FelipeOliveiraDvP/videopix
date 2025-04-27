@@ -2,15 +2,16 @@
 
 namespace App\Services\Payment;
 
+use App\Mail\PaymentConfirmEmail;
 use App\Models\Package;
 use App\Models\Transaction;
 use App\Models\UserPackage;
-use App\Services\Mail\BrevoMailService;
-use Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Exception;
 
 class GhostPaymentService implements PaymentService
 {
@@ -140,9 +141,11 @@ class GhostPaymentService implements PaymentService
         'status' => $status,
       ]);
 
+      // Send email to user
       if (App::environment('production')) {
-        $mail = new BrevoMailService();
-        $mail->send($transaction->user->email, 1);
+        $user = $transaction->user;
+        $package = Package::where('id', $transaction->item_id)->first();
+        Mail::to($user->email)->send(new PaymentConfirmEmail($user, $package));
       }
 
       $user = $transaction->user;
@@ -160,8 +163,6 @@ class GhostPaymentService implements PaymentService
           'expires_at' => $this->getExpirationDate($package),
         ]);
       }
-
-      $user->balance->add($transaction->amount);
     } else {
       Log::error('Unknown status received or invalid transaction', [
         'transaction_id' => $transaction_id,

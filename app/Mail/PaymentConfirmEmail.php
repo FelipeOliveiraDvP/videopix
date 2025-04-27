@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Package;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,20 +11,20 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RecoveryPasswordEmail extends Mailable
+class PaymentConfirmEmail extends Mailable
 {
   use Queueable, SerializesModels;
 
   public User $user;
-  public string $token;
+  public Package $package;
 
   /**
    * Create a new message instance.
    */
-  public function __construct($user, $token)
+  public function __construct($user, $package)
   {
     $this->user = $user;
-    $this->token = $token;
+    $this->package = $package;
   }
 
   /**
@@ -32,7 +33,7 @@ class RecoveryPasswordEmail extends Mailable
   public function envelope(): Envelope
   {
     return new Envelope(
-      subject: 'Recuperação de Senha',
+      subject: 'Pagamento confirmado',
     );
   }
 
@@ -42,7 +43,7 @@ class RecoveryPasswordEmail extends Mailable
   public function content(): Content
   {
     return new Content(
-      view: 'emails.recovery',
+      view: 'emails.payment',
     );
   }
 
