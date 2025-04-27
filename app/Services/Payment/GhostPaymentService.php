@@ -49,25 +49,31 @@ class GhostPaymentService implements PaymentService
       $api_key = config('services.ghost.api_key');
       $api_url = config('services.ghost.api_url');
 
-      $response = Http::withHeaders([
-        'Authorization' => $api_key,
-        'Content-Type' => 'application/json',
-      ])->post($api_url, [
+      $payload = [
         'name' => $customer['name'],
         'email' => $customer['email'],
         'phone' => only_numbers($customer['phone']),
         'cpf' => only_numbers($customer['cpf']),
         'paymentMethod' => 'PIX',
-        'amount' => $amount,
+        'amount' => $amount * 100,
         'items' => [
           [
             'title' => $item['title'] ?? 'Sem título',
             'quantity' => 1,
-            'unitPrice' => $amount,
+            'unitPrice' => $amount * 100,
             'tangible' => false,
           ]
         ],
-      ]);
+      ];
+
+      $response = Http::withHeaders([
+        'Authorization' => $api_key,
+        'Content-Type' => 'application/json',
+      ])
+        ->withOptions([
+          'verify' => false,
+        ])
+        ->post($api_url, $payload);
 
       if (!$response->successful()) {
         throw new Exception($response->getBody()->getContents());
@@ -128,6 +134,11 @@ class GhostPaymentService implements PaymentService
     if ($status == 'APPROVED' && $transaction->status == 'pending') {
       $transaction->status = 'completed';
       $transaction->save();
+
+      Log::info('Transaction completed', [
+        'transaction_id' => $transaction_id,
+        'status' => $status,
+      ]);
 
       if (App::environment('production')) {
         $mail = new BrevoMailService();
