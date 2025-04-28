@@ -45,6 +45,8 @@ class Customer extends Model
     return $this->belongsTo(User::class);
   }
 
+
+
   /**
    * Filters the query based on the provided filters.
    */

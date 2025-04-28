@@ -6,6 +6,8 @@ use App\Http\Requests\CustomerInvitationRequest;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Models\Package;
+use App\Models\UserPackage;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -36,8 +38,28 @@ class CustomerController extends Controller
    */
   public function edit(Customer $customer): Response
   {
+    $user = $customer->user;
+    $user_package = UserPackage::where('user_id', $user->id)
+      ->where('expires_at', '>=', now())
+      ->first();
+
+    $package = Package::where('id', $user_package->package_id)->first() ?? null;
+    $deposits = $user->transactions()
+      ->where('transaction_type', 'deposit')
+      ->sum('amount');
+    $withdraws = $user->transactions()
+      ->where('transaction_type', 'withdraw')
+      ->sum('amount');
+    $balance = $user->balance
+      ? $user->balance->amount
+      : 0;
+
     return Inertia::render('Admin/Customers/Edit', [
       'customer' => new CustomerResource($customer),
+      'package' => $package,
+      'deposits' => $deposits,
+      'withdraws' => $withdraws,
+      'balance' => $balance,
     ]);
   }
 
