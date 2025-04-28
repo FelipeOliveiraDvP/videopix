@@ -38,6 +38,7 @@ function VideoPlayer({
   const [lastSentProgress, setLastSentProgress] = useState(0);
   const [watched, setWatched] = useState(false);
   const playerRef = useRef<ReactPlayer>(null);
+  const hasSeeked = useRef(false);
 
   const getTimeElapsed = (currentProgress: number, duration: number) => {
     const elapsed = (currentProgress / 100) * duration;
@@ -89,17 +90,28 @@ function VideoPlayer({
   };
 
   const handleWatched = () => {
-    router.post(route("customer.videos.watched", video.id), {
-      watched_time: duration,
-    });
+    router.post(
+      route("customer.videos.watched", video.id),
+      {
+        watched_time: duration,
+      },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        showProgress: false,
+      }
+    );
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      playerRef.current?.seekTo(video.watched_time, "seconds");
-    }, 500);
+    if (!hasSeeked.current) {
+      const timer = setTimeout(() => {
+        playerRef.current?.seekTo(video.watched_time, "seconds");
+        hasSeeked.current = true; // Marca que já fez o seek
+      }, 500);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, [video]);
 
   useEffect(() => {

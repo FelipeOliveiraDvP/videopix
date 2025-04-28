@@ -132,7 +132,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     ->name('profile.destroy');
 });
 
-// TODO: Public route for payment gateway
-// Route::post('/webhook', [PaymentController::class, 'webhook']);
-
 require __DIR__ . '/auth.php';
