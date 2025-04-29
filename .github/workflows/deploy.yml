@@ -14,12 +14,22 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v3
 
+      - name: Instalar PNPM e buildar projeto
+        run: |
+          npm install -g pnpm
+          pnpm install
+          pnpm build
+
       - name: Configura chave SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copiar build para VPS
+        run: |
+          scp -r public/build ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/sites/videopix/public/
 
       - name: Deploy na VPS
         run: |
