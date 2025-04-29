@@ -8,6 +8,7 @@ import {
   Paper,
   Select,
   Stack,
+  TextInput,
   Title,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
@@ -20,7 +21,8 @@ export default function Balance() {
   const [opened, { toggle, close }] = useDisclosure();
 
   const { data, setData, processing, reset } = useForm({
-    user_id: "",
+    name: "",
+    cpf: "",
     type: "",
     status: "",
     created_at: "",
@@ -71,12 +73,18 @@ export default function Balance() {
       >
         <form onSubmit={submit}>
           <Stack>
-            <Select
-              label="Cliente"
-              placeholder="Selecione um cliente"
-              data={["João", "Maria"]}
-              value={data.user_id}
-              onChange={(value) => setData("user_id", value || "")}
+            <TextInput
+              label="Nome do Cliente"
+              placeholder="Digite o nome"
+              value={data.name}
+              onChange={(e) => setData("name", e.target.value)}
+            />
+
+            <TextInput
+              label="CPF do Cliente"
+              placeholder="Digite o CPF"
+              value={data.cpf}
+              onChange={(e) => setData("cpf", e.target.value)}
             />
             <Select
               label="Tipo de movimentação"
