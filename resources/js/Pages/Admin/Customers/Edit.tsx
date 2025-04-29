@@ -1,6 +1,8 @@
 import StatsCard from "@/Components/StatsCard";
+import { usePageProps } from "@/hooks/usePageProps";
 import AdminLayout from "@/Layouts/AdminLayout";
-import { Customer } from "@/types";
+import { Customer, Package } from "@/types";
+import { moneyFormat } from "@/Utils/moneyFormat";
 import { Head, router, useForm, usePage } from "@inertiajs/react";
 import {
   ActionIcon,
@@ -22,7 +24,20 @@ import { FormEventHandler } from "react";
 import { IMaskInput } from "react-imask";
 
 export default function Edit() {
-  const { customer } = usePage<{ customer: Customer }>().props;
+  const {
+    customer,
+    package: pack,
+    deposits,
+    withdraws,
+    balance,
+  } = usePageProps<{
+    customer: Customer;
+    package: Package | null;
+    withdraws: number;
+    deposits: number;
+    balance: number;
+  }>();
+
   const { data, setData, put, processing, errors, reset } = useForm({
     name: customer.name || "",
     email: customer.email || "",
@@ -126,10 +141,21 @@ export default function Edit() {
                   spacing={{ base: 10, sm: "xs" }}
                   verticalSpacing={{ base: "xs" }}
                 >
-                  <StatsCard type="packages" value="Prata - R$ 50,00" />
-                  <StatsCard type="deposits" value="R$ 150,00" />
-                  <StatsCard type="withdrawals" value="R$ 150,00" />
-                  <StatsCard type="balance" value="R$ 0,00" />
+                  <StatsCard
+                    type="subscribe"
+                    packageId={pack?.id}
+                    value={
+                      pack
+                        ? `${pack.name} - ${moneyFormat(pack.price)}`
+                        : "Você ainda não tem pacote"
+                    }
+                  />
+                  <StatsCard type="deposits" value={moneyFormat(deposits)} />
+                  <StatsCard
+                    type="withdrawals"
+                    value={moneyFormat(withdraws)}
+                  />
+                  <StatsCard type="balance" value={moneyFormat(balance)} />
                 </SimpleGrid>
               </Grid.Col>
             </Grid>

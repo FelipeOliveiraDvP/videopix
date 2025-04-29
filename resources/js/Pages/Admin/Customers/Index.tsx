@@ -25,19 +25,28 @@ export default function Index() {
   const [inviteOpened, { toggle: toggleInviteModal, close: closeInviteModal }] =
     useDisclosure();
 
-  const { data, setData, processing, reset } = useForm({
+  const { data, setData, reset, processing, submit } = useForm({
     name: "",
     email: "",
-    phone: "",
     cpf: "",
-    active: true as boolean,
+    phone: "",
+    active: false as boolean,
   });
 
-  const submit: FormEventHandler = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    submit("get", route("admin.customers.index"), {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    });
+  };
+
+  const handleClear = () => {
+    reset();
     router.get(
       route("admin.customers.index"),
-      { ...data, active: String(data.active) },
+      {},
       {
         preserveState: true,
         preserveScroll: true,
@@ -82,7 +91,7 @@ export default function Index() {
         title={<Title order={3}>Filtros</Title>}
         position="right"
       >
-        <form onSubmit={submit}>
+        <form onSubmit={handleSubmit}>
           <Stack>
             <TextInput
               label="Nome"
@@ -99,7 +108,7 @@ export default function Index() {
             <TextInput
               label="CPF"
               placeholder="CPF do cliente"
-              value={data.email}
+              value={data.cpf}
               onChange={(e) => setData("cpf", e.target.value)}
             />
             <TextInput
@@ -116,23 +125,7 @@ export default function Index() {
             <Button type="submit" loading={processing}>
               Filtrar
             </Button>
-            <Button
-              variant="subtle"
-              onClick={() => {
-                reset();
-                close();
-                router.get(
-                  route("admin.customers.index"),
-                  {},
-                  {
-                    preserveState: true,
-                    preserveScroll: true,
-                    replace: true,
-                  }
-                );
-                closeFilters();
-              }}
-            >
+            <Button variant="subtle" onClick={handleClear}>
               Limpar Filtros
             </Button>
           </Stack>

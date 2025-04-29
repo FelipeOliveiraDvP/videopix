@@ -102,6 +102,7 @@ export default function UpdateProfileInformation({
               mask="000.000.000-00"
               value={data.cpf}
               onChange={(e) => setData("cpf", e.currentTarget.value)}
+              readOnly={user.role === "customer"}
               error={errors.cpf}
             />
             <TextInput

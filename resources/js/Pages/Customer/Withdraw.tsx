@@ -74,9 +74,10 @@ export default function Withdraw() {
               {can_withdraw ? (
                 <Alert variant="light" color="yellow">
                   <Text size="sm">
-                    Você ainda pode retirar {moneyFormat(calcAmountAvailable())}{" "}
-                    essa semana. Você pode aumentar esse limite agora realizando
-                    um upgrade no seu pacote{" "}
+                    Você ainda pode retirar{" "}
+                    <b>{moneyFormat(calcAmountAvailable())}</b> essa semana.
+                    Você pode aumentar esse limite agora realizando um upgrade
+                    no seu pacote{" "}
                     <Anchor
                       component={Link}
                       href={route("customer.packages")}
@@ -137,7 +138,11 @@ export default function Withdraw() {
                 gradient={{ from: "orange", to: "yellow", deg: 219 }}
                 type="submit"
                 loading={processing}
-                disabled={processing || !can_withdraw}
+                disabled={
+                  processing ||
+                  !can_withdraw ||
+                  data.amount > calcAmountAvailable()
+                }
               >
                 Solicitar Saque
               </Button>

@@ -6,10 +6,12 @@ use App\Http\Requests\CustomerInvitationRequest;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Models\Package;
+use App\Models\UserPackage;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 
 
@@ -18,16 +20,52 @@ class CustomerController extends Controller
   /**
    * Display the list of customers.
    */
-  public function index(): Response
+  public function index(Request $request): Response
   {
+    $filters = $request->only('name', 'email', 'cpf', 'phone', 'active');
+
+    $customers = Customer::with('user')
+      ->when(
+        $filters['name'] ?? null,
+        fn($query, $name) =>
+        $query->whereHas(
+          'user',
+          fn($q) =>
+          $q->where('name', 'like', "%{$name}%")
+        )
+      )
+      ->when(
+        $filters['email'] ?? null,
+        fn($query, $email) =>
+        $query->whereHas(
+          'user',
+          fn($q) =>
+          $q->where('email', 'like', "%{$email}%")
+        )
+      )
+      ->when(
+        $filters['cpf'] ?? null,
+        fn($query, $cpf) =>
+        $query->where('cpf', 'like', "%{$cpf}%")
+      )
+      ->when(
+        $filters['phone'] ?? null,
+        fn($query, $phone) =>
+        $query->where('phone', 'like', "%{$phone}%")
+      )
+      // ->when(
+      //   !is_null($filters['active'] ?? null),
+      //   fn($query, $active) =>
+      //   $query->where('active', (bool)$active)
+      // )
+      ->orderBy('created_at', 'desc')
+      ->paginate(100)
+      ->withQueryString()
+      ->through(fn($customer) => new CustomerResource($customer));
+
     return Inertia::render('Admin/Customers/Index', [
-      'filters' => Request::all('name', 'email', 'phone', 'active'),
-      'customers' => Customer::with('user')
-        ->filter(Request::only('name', 'email', 'phone', 'active'))
-        ->orderBy('created_at', 'desc')
-        ->paginate(100)
-        ->withQueryString()
-        ->through(fn($customer) => new CustomerResource($customer)),
+      'filters' => $filters,
+      'customers' => $customers,
     ]);
   }
 
@@ -36,8 +74,28 @@ class CustomerController extends Controller
    */
   public function edit(Customer $customer): Response
   {
+    $user = $customer->user;
+    $user_package = UserPackage::where('user_id', $user->id)
+      ->where('expires_at', '>=', now())
+      ->first();
+
+    $package = Package::where('id', $user_package->package_id)->first() ?? null;
+    $deposits = $user->transactions()
+      ->where('transaction_type', 'deposit')
+      ->sum('amount');
+    $withdraws = $user->transactions()
+      ->where('transaction_type', 'withdraw')
+      ->sum('amount');
+    $balance = $user->balance
+      ? $user->balance->amount
+      : 0;
+
     return Inertia::render('Admin/Customers/Edit', [
       'customer' => new CustomerResource($customer),
+      'package' => $package,
+      'deposits' => $deposits,
+      'withdraws' => $withdraws,
+      'balance' => $balance,
     ]);
   }
 

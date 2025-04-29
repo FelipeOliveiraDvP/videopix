@@ -26,7 +26,7 @@
 
   <!-- Scripts -->
   @routes
-  @if (app()->environment('local'))
+  @if (app()->environment('development'))
   @viteReactRefresh
   @endif
   @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])

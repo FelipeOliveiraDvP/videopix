@@ -82,7 +82,7 @@ function StatsCard({ type, value, packageId }: StatsCardProps) {
       <Group justify="space-between" align="start">
         <div>
           <Text c="dimmed" tt="uppercase" fw={700} fz="xs">
-            {stats[type].title}
+            {isPackage ? "Pacote" : stats[type].title}
           </Text>
           <Text fw={700} fz="xl">
             {value}
