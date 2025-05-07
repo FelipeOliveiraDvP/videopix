@@ -86,7 +86,6 @@ class BalanceController extends Controller
       ]);
       $transaction->user->balance->subtract($transaction->amount);
 
-      // if (App::environment('production')) {
       $customer = Customer::where('user_id', $transaction->user_id)->first();
       $amount = $transaction->amount;
       $deposit_date = now();
@@ -96,7 +95,6 @@ class BalanceController extends Controller
         $amount,
         $deposit_date
       ));
-      // }
 
       return Redirect::route('admin.balance')
         ->with('success', 'Saque aprovado com sucesso.');

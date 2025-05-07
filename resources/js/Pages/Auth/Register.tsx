@@ -26,9 +26,10 @@ import { IMaskInput } from "react-imask";
 export default function Register() {
   const [active, setActive] = useState(0);
   const matches = useMediaQuery("(min-width: 75em)");
+  const params = new URLSearchParams(window.location.search);
   const { data, setData, post, processing, errors, reset } = useForm({
     name: "",
-    email: "",
+    email: params.get("email") || "",
     phone: "",
     birth_date: "",
     cpf: "",
@@ -151,6 +152,7 @@ export default function Register() {
                     value={data.email}
                     onChange={(e) => setData("email", e.target.value)}
                     error={errors.email}
+                    readOnly
                   />
                   <InputBase
                     label="Telefone"
@@ -213,8 +215,8 @@ export default function Register() {
                       Você está quase lá!
                     </Text>
                     <Text size="sm" c="dimmed" ta="center">
-                      Para finalizar o cadastro, clique no botão abaixo e
-                      verifique seu e-mail para ativar sua conta.
+                      Clique no botão abaixo para criar sua conta e acessar a
+                      plataforma.
                     </Text>
                     <Button
                       size="lg"
@@ -245,15 +247,6 @@ export default function Register() {
               >
                 Próximo passo
               </Button>
-              <Anchor
-                component={Link}
-                href={route("login")}
-                ta="center"
-                mt="md"
-                w="100%"
-              >
-                Já tenho uma conta
-              </Anchor>
             </Group>
           </form>
         </Paper>

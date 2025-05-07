@@ -10,7 +10,6 @@ import {
   Anchor,
   Title,
   Text,
-  Divider,
 } from "@mantine/core";
 import AuthLayout from "@/Layouts/AuthLayout";
 import Logo from "@/Components/Logo";
@@ -82,10 +81,6 @@ export default function Login({
               ta="center"
             >
               Esqueci minha senha
-            </Anchor>
-            <Divider label="Ou" />
-            <Anchor component={Link} href={route("register")} ta="center">
-              Criar Conta
             </Anchor>
           </Stack>
         </form>

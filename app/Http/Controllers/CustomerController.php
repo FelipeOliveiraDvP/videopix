@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CustomerInvitationRequest;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Http\Resources\CustomerResource;
+use App\Mail\InviteCustomerEmail;
 use App\Models\Customer;
+use App\Models\CustomerInvite;
 use App\Models\Package;
 use App\Models\UserPackage;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Str;
@@ -139,17 +143,21 @@ class CustomerController extends Controller
     $emails = $request->validated()['emails'];
 
     foreach ($emails as $email) {
-      $token = Str::uuid();
+      $code = Str::uuid();
 
-      // Opcional: salvar token no banco para validação futura
+      CustomerInvite::create([
+        'email' => $email,
+        'code' => $code,
+        'expires_at' => now()->addDays(7),
+      ]);
 
-      // $emailService->send(
-      //   $email,
-      //   env('MAIL_TEMPLATE_INVITATION'), // Substitua pelo UUID do seu template
-      //   [
-      //     'register_customer_url' => route('register', ['token' => $token]),
-      //   ],
-      // );
+      $inviteLink = URL::temporarySignedRoute(
+        'register',
+        now()->addDays(7),
+        ['code' => $code]
+      );
+
+      Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
     }
 
     return redirect()->back()->with('success', 'Convites enviados com sucesso!');
