@@ -79,7 +79,7 @@ class CustomerController extends Controller
       ->where('expires_at', '>=', now())
       ->first();
 
-    $package = Package::where('id', $user_package->package_id)->first() ?? null;
+    $package = $user_package ? Package::where('id', $user_package->package_id)->first() : null;
     $deposits = $user->transactions()
       ->where('transaction_type', 'deposit')
       ->sum('amount');
@@ -92,7 +92,8 @@ class CustomerController extends Controller
 
     return Inertia::render('Admin/Customers/Edit', [
       'customer' => new CustomerResource($customer),
-      'package' => $package,
+      'packages' => Package::all(),
+      'customer_package' => $package,
       'deposits' => $deposits,
       'withdraws' => $withdraws,
       'balance' => $balance,
@@ -105,6 +106,25 @@ class CustomerController extends Controller
   public function update(CustomerUpdateRequest $request, Customer $customer): RedirectResponse
   {
     $customer->update($request->validated());
+
+    if ($request->package_id) {
+      $user_package = UserPackage::where('user_id', $customer->user_id)
+        ->where('expires_at', '>=', now())
+        ->first();
+
+      if ($user_package) {
+        $user_package->update([
+          'package_id' => $request->package_id,
+          'expires_at' => now()->addDays(30),
+        ]);
+      } else {
+        UserPackage::create([
+          'user_id' => $customer->user_id,
+          'package_id' => $request->package_id,
+          'expires_at' => now()->addDays(30),
+        ]);
+      }
+    }
 
     return redirect()
       ->route('admin.customers.index')
