@@ -5,8 +5,9 @@ import CustomerLayout from "@/Layouts/CustomerLayout";
 import { PaginatedResponse, Video } from "@/types";
 import { formatViewsCount } from "@/Utils/formatViewsCount";
 import { moneyFormat } from "@/Utils/moneyFormat";
-import { Head, Link } from "@inertiajs/react";
-import { Box, Grid, Group, Stack, Title, UnstyledButton } from "@mantine/core";
+import { Head, Link, router } from "@inertiajs/react";
+import { Grid, Stack, Title, UnstyledButton } from "@mantine/core";
+import { useEffect } from "react";
 
 export default function Home() {
   const { helpers, auth, videos, watched, views_count } = usePageProps<{
@@ -14,6 +15,12 @@ export default function Home() {
     watched: PaginatedResponse<Video>;
     videos: PaginatedResponse<Video>;
   }>();
+
+  useEffect(() => {
+    if (auth.user.role === "admin") {
+      router.visit(route("admin.home"));
+    }
+  }, [auth]);
 
   return (
     <CustomerLayout>
