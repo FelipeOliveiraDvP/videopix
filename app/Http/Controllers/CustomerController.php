@@ -160,8 +160,7 @@ class CustomerController extends Controller
         ['code' => $code]
       );
 
-      // Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
-      $this->sendInviteByBrevo($email, $inviteLink);
+      Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
     }
 
     return redirect()->back()->with('success', 'Convites enviados com sucesso!');
@@ -179,37 +178,5 @@ class CustomerController extends Controller
     return redirect()
       ->route('admin.customers.index')
       ->with('success', 'Cliente excluído com sucesso.');
-  }
-
-  /**
-   * Send a cusomer invite by Brevo API
-   */
-  private function sendInviteByBrevo(string $email, string $inviteLink): void
-  {
-    try {
-      $html = view('emails.invite', [
-        'inviteLink' => $inviteLink,
-      ])->render();
-
-      Http::withHeaders([
-        'api-key' => config('services.brevo.api_key'),
-        'Content-Type' => 'application/json',
-      ])->post(config('services.brevo.api_url'), [
-        'sender' => [
-          'name' => config('mail.from.name'),
-          'email' => config('mail.from.address')
-        ],
-        'to' => [[
-          'email' => $email,
-          'name' => 'Novo cliente'
-        ]],
-        'subject' => 'Bem vindo ao Video PIX!',
-        'htmlContent' => $html,
-        'trackLinks' => 'none'
-      ]);
-    } catch (Exception $e) {
-      app(\App\Services\ExternalLogService::class)->fatalError($e);
-      Log::error('Error sending email via Brevo: ' . $e->getMessage());
-    }
   }
 }

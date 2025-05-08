@@ -34,7 +34,13 @@ class AuthenticatedSessionController extends Controller
       ? 'admin.dashboard'
       : 'customer.home';
 
-    return redirect()->intended(route($redirect_to, absolute: false));
+    $intended = redirect()->intended()->getTargetUrl();
+
+    if ($intended === url('/')) {
+      return redirect()->route($redirect_to);
+    }
+
+    return redirect()->intended();
   }
 
   /**

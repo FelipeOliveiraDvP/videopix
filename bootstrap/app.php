@@ -42,10 +42,6 @@ return Application::configure(basePath: dirname(__DIR__))
     });
 
     $exceptions->report(function (Throwable $exception) {
-      if (app()->environment(['local', 'testing', 'development'])) {
-        return;
-      }
-
       app(\App\Services\ExternalLogService::class)->fatalError($exception);
     });
   })->create();

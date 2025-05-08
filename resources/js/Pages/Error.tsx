@@ -43,7 +43,7 @@ export default function ErrorPage({ status }: ErrorPageProps) {
               variant="filled"
               component={Link}
               size="md"
-              href={route("customer.home")}
+              href={route(helpers.user_home)}
             >
               Voltar para a home
             </Button>
