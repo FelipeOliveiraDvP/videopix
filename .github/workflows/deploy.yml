@@ -16,6 +16,9 @@ jobs:
 
       - name: Instalar PNPM e buildar projeto
         run: |
+          echo "👉 Preparando o .env para o build do frontend"
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+
           npm install -g pnpm
           pnpm install
           pnpm build
@@ -49,7 +52,4 @@ jobs:
             echo "👉 Subindo containers atualizados..."
             docker-compose down
             docker-compose up -d --build
-
-            echo "👉 Rodando migrations..."
-            docker exec videopix-app php artisan migrate --force
           EOF
