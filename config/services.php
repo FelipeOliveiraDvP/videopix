@@ -39,4 +39,9 @@ return [
     'api_key' => env('GHOST_API_KEY'),
     'api_url' => env('GHOST_API_URL'),
   ],
+
+  'brevo' => [
+    'api_key' => env('BREVO_API_KEY'),
+    'api_url' => env('BREVO_API_URL'),
+  ],
 ];
