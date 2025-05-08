@@ -146,6 +146,10 @@ class CustomerController extends Controller
     $emails = $request->validated()['emails'];
 
     foreach ($emails as $email) {
+      if (CustomerInvite::where('email', $email)->exists()) {
+        continue;
+      }
+
       $code = Str::uuid();
 
       CustomerInvite::create([
