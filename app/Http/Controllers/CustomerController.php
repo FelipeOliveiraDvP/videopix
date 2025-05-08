@@ -146,6 +146,10 @@ class CustomerController extends Controller
     $emails = $request->validated()['emails'];
 
     foreach ($emails as $email) {
+      if (CustomerInvite::where('email', $email)->exists()) {
+        continue;
+      }
+
       $code = Str::uuid();
 
       CustomerInvite::create([
@@ -157,7 +161,7 @@ class CustomerController extends Controller
       $inviteLink = URL::temporarySignedRoute(
         'register',
         now()->addDays(7),
-        ['code' => $code]
+        ['email' => $email, 'code' => $code]
       );
 
       Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
