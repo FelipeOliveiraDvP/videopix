@@ -21,7 +21,7 @@ class BalanceController extends Controller
   {
     $filters = $request->only('name', 'cpf', 'type', 'status', 'created_at', 'external_id', 'amount');
 
-    $transactions = Transaction::with('user:id,name', 'user.customer:id,user_id,cpf') // Carrega User + Customer juntos
+    $transactions = Transaction::with('user:id,name', 'user.customer:id,user_id,cpf,pix') // Carrega User + Customer juntos
       ->when(
         $filters['name'] ?? null,
         fn($query, $name) =>

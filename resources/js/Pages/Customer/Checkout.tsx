@@ -114,9 +114,8 @@ export default function Checkout() {
                   readOnly
                   defaultValue={pix_code}
                   mt="md"
-                  rightSectionPointerEvents="none"
                   rightSection={
-                    <CopyButton value={pix_qrcode} timeout={2000}>
+                    <CopyButton value={pix_code} timeout={2000}>
                       {({ copied, copy }) => (
                         <Tooltip
                           label={copied ? "Copiado" : "Copiar"}

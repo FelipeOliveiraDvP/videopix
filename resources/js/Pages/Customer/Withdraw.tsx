@@ -16,10 +16,12 @@ import {
 import { FormEventHandler } from "react";
 
 export default function Withdraw() {
-  const { helpers, auth, current_package, can_withdraw } = usePageProps<{
-    current_package: Package | null;
-    can_withdraw: boolean;
-  }>();
+  const { helpers, auth, current_package, total_transactions, can_withdraw } =
+    usePageProps<{
+      total_transactions: number;
+      current_package: Package | null;
+      can_withdraw: boolean;
+    }>();
 
   const { data, setData, post, processing, errors, reset } = useForm({
     amount: 0,
@@ -37,7 +39,7 @@ export default function Withdraw() {
     if (!current_package) return 0;
 
     const { withdraw_percentage, price } = current_package;
-    return withdraw_percentage * price;
+    return withdraw_percentage * price - total_transactions;
   };
 
   return (
