@@ -161,7 +161,7 @@ class CustomerController extends Controller
       $inviteLink = URL::temporarySignedRoute(
         'register',
         now()->addDays(7),
-        ['code' => $code]
+        ['email' => $email, 'code' => $code]
       );
 
       Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
