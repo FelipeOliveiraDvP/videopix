@@ -22,12 +22,12 @@ class ExternalLogService
             [
               'name' => 'Arquivo',
               'value' => $exception->getFile(),
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Linha',
               'value' => $exception->getLine(),
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Trace',
@@ -62,28 +62,28 @@ class ExternalLogService
       'content' => 'Novo saque solicitado.',
       'embeds' => [
         [
-          'title' => 'Detalhes do saque',
-          'description' => 'Um novo saque foi solicitado.',
+          'title' => 'Um cliente solicitou um saque.',
+          'description' => "Para mais detalhes, acesse o painel em https://videopix.pro/admin/balances?cpf={$customer_cpf}&status=pending&type=withdraw",
           'fields' => [
             [
               'name' => 'ID da transação',
               'value' => $transaction_id,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Cliente',
               'value' => $customer_name,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'CPF do cliente',
               'value' => $customer_cpf,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Valor',
               'value' => number_format($amount, 2, ',', '.'),
-              'inline' => true,
+              'inline' => false,
             ]
           ],
         ],
@@ -114,28 +114,28 @@ class ExternalLogService
       'content' => 'Pagamento confirmado.',
       'embeds' => [
         [
-          'title' => 'Detalhes do pagamento',
-          'description' => 'Um pagamento foi confirmado.',
+          'title' => 'Recebemos o pagamento da compra do pacote.',
+          'description' => "Para mais detalhes, acesse o painel em https://videopix.pro/admin/balances?cpf={$customer_cpf}&status=success&type=deposit",
           'fields' => [
             [
               'name' => 'ID da transação',
               'value' => $transaction_id,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Cliente',
               'value' => $customer_name,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'CPF do cliente',
               'value' => $customer_cpf,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Pacote',
               'value' => $package_name,
-              'inline' => true,
+              'inline' => false,
             ]
           ],
         ],
@@ -163,26 +163,26 @@ class ExternalLogService
     $url = config('logging.discord.new_customer');
 
     $payload = [
-      'content' => 'Novo cliente cadastrado.',
+      'content' => 'Um novo cliente se cadastrou usando o link.',
       'embeds' => [
         [
-          'title' => 'Detalhes do cliente',
-          'description' => 'Um novo cliente foi cadastrado.',
+          'title' => 'Informações do cliente',
+          'description' => "Para mais detalhes, acesse o painel em https://videopix.pro/admin/customers?cpf={$customer_cpf}",
           'fields' => [
             [
               'name' => 'Nome do cliente',
               'value' => $customer_name,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'CPF do cliente',
               'value' => $customer_cpf,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Email do cliente',
               'value' => $customer_email,
-              'inline' => true,
+              'inline' => false,
             ]
           ],
         ],
@@ -210,36 +210,35 @@ class ExternalLogService
     $url = config('logging.discord.new_purchase');
 
     $payload = [
-      'content' => 'Nova compra realizada.',
+      'content' => 'O cliente tentou contratar um pacote.',
       'embeds' => [
         [
-          'title' => 'Detalhes do cliente',
-          'description' => 'Um novo cliente foi cadastrado.',
+          'title' => 'Informações do cliente',
           'fields' => [
             [
               'name' => 'Nome do cliente',
               'value' => $customer_name,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'CPF do cliente',
               'value' => $customer_cpf,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Email do cliente',
               'value' => $customer_email,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Pacote',
               'value' => $package_name,
-              'inline' => true,
+              'inline' => false,
             ],
             [
               'name' => 'Valor',
               'value' => number_format($amount, 2, ',', '.'),
-              'inline' => true,
+              'inline' => false,
             ]
           ],
         ],
