@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CustomerInvitationRequest;
 use App\Http\Requests\CustomerUpdateRequest;
 use App\Http\Resources\CustomerResource;
+use App\Mail\InviteCustomerEmail;
 use App\Models\Customer;
+use App\Models\CustomerInvite;
 use App\Models\Package;
 use App\Models\UserPackage;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Str;
@@ -79,7 +83,7 @@ class CustomerController extends Controller
       ->where('expires_at', '>=', now())
       ->first();
 
-    $package = Package::where('id', $user_package->package_id)->first() ?? null;
+    $package = $user_package ? Package::where('id', $user_package->package_id)->first() : null;
     $deposits = $user->transactions()
       ->where('transaction_type', 'deposit')
       ->sum('amount');
@@ -92,7 +96,8 @@ class CustomerController extends Controller
 
     return Inertia::render('Admin/Customers/Edit', [
       'customer' => new CustomerResource($customer),
-      'package' => $package,
+      'packages' => Package::all(),
+      'customer_package' => $package,
       'deposits' => $deposits,
       'withdraws' => $withdraws,
       'balance' => $balance,
@@ -105,6 +110,25 @@ class CustomerController extends Controller
   public function update(CustomerUpdateRequest $request, Customer $customer): RedirectResponse
   {
     $customer->update($request->validated());
+
+    if ($request->package_id) {
+      $user_package = UserPackage::where('user_id', $customer->user_id)
+        ->where('expires_at', '>=', now())
+        ->first();
+
+      if ($user_package) {
+        $user_package->update([
+          'package_id' => $request->package_id,
+          'expires_at' => now()->addDays(30),
+        ]);
+      } else {
+        UserPackage::create([
+          'user_id' => $customer->user_id,
+          'package_id' => $request->package_id,
+          'expires_at' => now()->addDays(30),
+        ]);
+      }
+    }
 
     return redirect()
       ->route('admin.customers.index')
@@ -119,17 +143,21 @@ class CustomerController extends Controller
     $emails = $request->validated()['emails'];
 
     foreach ($emails as $email) {
-      $token = Str::uuid();
+      $code = Str::uuid();
 
-      // Opcional: salvar token no banco para validação futura
+      CustomerInvite::create([
+        'email' => $email,
+        'code' => $code,
+        'expires_at' => now()->addDays(7),
+      ]);
 
-      // $emailService->send(
-      //   $email,
-      //   env('MAIL_TEMPLATE_INVITATION'), // Substitua pelo UUID do seu template
-      //   [
-      //     'register_customer_url' => route('register', ['token' => $token]),
-      //   ],
-      // );
+      $inviteLink = URL::temporarySignedRoute(
+        'register',
+        now()->addDays(7),
+        ['code' => $code]
+      );
+
+      Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
     }
 
     return redirect()->back()->with('success', 'Convites enviados com sucesso!');

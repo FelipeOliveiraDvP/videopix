@@ -95,7 +95,7 @@ class WithdrawController extends Controller
         ->with('error', 'Você não tem saldo suficiente para fazer o saque.');
     }
 
-    if (($withdrawnThisWeek + $requestAmount) > $packageLimit) {
+    if ($packageLimit > ($withdrawnThisWeek + $requestAmount)) {
       return Redirect::route('customer.withdraw')
         ->with('error', 'Você atingiu o limite de saque semanal permitido pelo seu pacote.');
     }

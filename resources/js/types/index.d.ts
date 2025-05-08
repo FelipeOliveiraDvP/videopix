@@ -62,6 +62,15 @@ export interface Transaction {
   external_id: string;
   transaction_type: TransactionType;
   status: TransactionStatus;
+  user?: {
+    id: number;
+    name: string;
+    customer: {
+      id: number;
+      cpf: string;
+      pix: string;
+    };
+  };
   created_at: string;
   updated_at: string;
 }

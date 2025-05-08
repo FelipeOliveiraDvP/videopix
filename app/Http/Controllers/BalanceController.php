@@ -21,7 +21,7 @@ class BalanceController extends Controller
   {
     $filters = $request->only('name', 'cpf', 'type', 'status', 'created_at', 'external_id', 'amount');
 
-    $transactions = Transaction::with('user:id,name', 'user.customer:id,user_id,cpf') // Carrega User + Customer juntos
+    $transactions = Transaction::with('user:id,name', 'user.customer:id,user_id,cpf,pix') // Carrega User + Customer juntos
       ->when(
         $filters['name'] ?? null,
         fn($query, $name) =>
@@ -86,7 +86,6 @@ class BalanceController extends Controller
       ]);
       $transaction->user->balance->subtract($transaction->amount);
 
-      // if (App::environment('production')) {
       $customer = Customer::where('user_id', $transaction->user_id)->first();
       $amount = $transaction->amount;
       $deposit_date = now();
@@ -96,7 +95,6 @@ class BalanceController extends Controller
         $amount,
         $deposit_date
       ));
-      // }
 
       return Redirect::route('admin.balance')
         ->with('success', 'Saque aprovado com sucesso.');

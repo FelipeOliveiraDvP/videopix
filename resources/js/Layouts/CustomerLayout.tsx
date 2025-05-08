@@ -33,7 +33,7 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Container py="lg">
+          <Container py="lg" px={0}>
             <Stack mb="md">
               {error && (
                 <Alert

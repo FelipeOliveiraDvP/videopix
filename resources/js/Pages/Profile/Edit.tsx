@@ -19,7 +19,7 @@ export default function Edit({
     <Layout>
       <Head title="Minha Conta" />
 
-      <Container size="sm">
+      <Container size="sm" p={0}>
         <Stack>
           <UpdateProfileInformationForm
             mustVerifyEmail={mustVerifyEmail}

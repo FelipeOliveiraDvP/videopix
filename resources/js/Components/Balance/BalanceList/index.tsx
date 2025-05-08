@@ -1,6 +1,16 @@
-import { ActionIcon, Badge, Group, MantineColor, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Badge,
+  CopyButton,
+  Group,
+  MantineColor,
+  Stack,
+  Text,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
-import { IconCancel, IconCheck, IconEye, IconTrash } from "@tabler/icons-react";
+import { IconCancel, IconCheck, IconCopy } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { modals } from "@mantine/modals";
 import { router } from "@inertiajs/react";
@@ -31,16 +41,69 @@ function BalanceList() {
     transactions: PaginatedResponse<Transaction>;
   }>();
 
-  const confirmApprove = (id: number) =>
+  const confirmApprove = ({
+    id,
+    name,
+    cpf,
+    pix,
+  }: {
+    id: number;
+    name?: string;
+    cpf?: string;
+    pix?: string;
+  }) =>
     modals.openConfirmModal({
       title: (
         <Text fw="bold">Deseja realmente aprovar a movimentação "{id}"?</Text>
       ),
       children: (
-        <Text size="sm">
-          Esta ação não pode ser desfeita. Você tem certeza de que deseja
-          continuar?
-        </Text>
+        <Stack>
+          <Text size="sm">
+            Confirme as informações do cliente antes de fazer o pagamento
+          </Text>
+          <TextInput
+            readOnly
+            defaultValue={name}
+            label="Nome do cliente"
+            placeholder="Nome do cliente"
+          />
+          <TextInput
+            readOnly
+            defaultValue={cpf}
+            label="CPF"
+            placeholder="000.000.000-00"
+          />
+          <TextInput
+            label="PIX Copia e Cola"
+            readOnly
+            defaultValue={pix}
+            mt="md"
+            rightSection={
+              <CopyButton value={pix as string} timeout={2000}>
+                {({ copied, copy }) => (
+                  <Tooltip
+                    label={copied ? "Copiado" : "Copiar"}
+                    withArrow
+                    position="right"
+                  >
+                    <ActionIcon
+                      color={copied ? "teal" : "gray"}
+                      variant="subtle"
+                      onClick={copy}
+                    >
+                      {copied ? (
+                        <IconCheck size={16} />
+                      ) : (
+                        <IconCopy size={16} />
+                      )}
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </CopyButton>
+            }
+            placeholder="PIX Copia e Cola"
+          />
+        </Stack>
       ),
       labels: { confirm: "Aprovar Movimentação", cancel: "Cancelar" },
       confirmProps: { color: "green" },
@@ -65,6 +128,7 @@ function BalanceList() {
       onConfirm: () => router.patch(route("admin.balance.reject", id)),
     });
 
+  console.log(transactions);
   return (
     <DataTable
       withTableBorder
@@ -135,7 +199,14 @@ function BalanceList() {
                   color="green"
                   size="lg"
                   title="Aprovar movimentação"
-                  onClick={() => confirmApprove(item.id)}
+                  onClick={() =>
+                    confirmApprove({
+                      id: item.id,
+                      name: item.user?.name,
+                      cpf: item.user?.customer.cpf,
+                      pix: item.user?.customer.pix,
+                    })
+                  }
                 >
                   <IconCheck size={16} />
                 </ActionIcon>

@@ -12,6 +12,7 @@ import {
   Group,
   InputBase,
   Paper,
+  Select,
   SimpleGrid,
   Stack,
   TextInput,
@@ -19,24 +20,20 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { IconArrowLeft } from "@tabler/icons-react";
-import dayjs from "dayjs";
 import { FormEventHandler } from "react";
 import { IMaskInput } from "react-imask";
+import dayjs from "dayjs";
 
 export default function Edit() {
-  const {
-    customer,
-    package: pack,
-    deposits,
-    withdraws,
-    balance,
-  } = usePageProps<{
-    customer: Customer;
-    package: Package | null;
-    withdraws: number;
-    deposits: number;
-    balance: number;
-  }>();
+  const { customer, customer_package, packages, deposits, withdraws, balance } =
+    usePageProps<{
+      customer: Customer;
+      packages: Package[];
+      customer_package: Package | null;
+      withdraws: number;
+      deposits: number;
+      balance: number;
+    }>();
 
   const { data, setData, put, processing, errors, reset } = useForm({
     name: customer.name || "",
@@ -45,6 +42,7 @@ export default function Edit() {
     birth_date: customer.birth_date || "",
     cpf: customer.cpf || "",
     pix: customer.pix || "",
+    package_id: customer_package?.id || "",
   });
 
   const submit: FormEventHandler = (e) => {
@@ -129,6 +127,16 @@ export default function Edit() {
                       onChange={(e) => setData("pix", e.currentTarget.value)}
                       error={errors.pix}
                     />
+                    <Select
+                      label="Pacote"
+                      placeholder="Selecione um pacote"
+                      data={packages.map((pkg) => ({
+                        value: String(pkg.id),
+                        label: `${pkg.name} - ${moneyFormat(pkg.price)}`,
+                      }))}
+                      value={String(data.package_id)}
+                      onChange={(value) => setData("package_id", value || "")}
+                    />
                     <Button type="submit" maw={250} loading={processing}>
                       Salvar
                     </Button>
@@ -143,11 +151,13 @@ export default function Edit() {
                 >
                   <StatsCard
                     type="subscribe"
-                    packageId={pack?.id}
+                    packageId={customer_package?.id}
                     value={
-                      pack
-                        ? `${pack.name} - ${moneyFormat(pack.price)}`
-                        : "Você ainda não tem pacote"
+                      customer_package
+                        ? `${customer_package.name} - ${moneyFormat(
+                            customer_package.price
+                          )}`
+                        : "Não possui pacote"
                     }
                   />
                   <StatsCard type="deposits" value={moneyFormat(deposits)} />
