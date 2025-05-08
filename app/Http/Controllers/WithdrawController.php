@@ -101,13 +101,20 @@ class WithdrawController extends Controller
     }
 
     // Cria a transação
-    Transaction::create([
+    $transaction = Transaction::create([
       'user_id' => $user->id,
       'amount' => $requestAmount,
       'transaction_type' => 'withdraw',
       'status' => 'pending', // Coloca como pending pra ser aprovado depois
       'item_id' => 0,
     ]);
+
+    app(\App\Services\ExternalLogService::class)->newWithdraw(
+      $transaction->id,
+      $user->name,
+      $user->customer->cpf,
+      $requestAmount
+    );
 
     return Redirect::route('customer.withdraw.success')
       ->with('thank_you', 'withdraw');
