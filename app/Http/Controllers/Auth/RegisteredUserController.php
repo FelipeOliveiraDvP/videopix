@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
       'role' => 'customer'
     ]);
 
-    Customer::create([
+    $customer = Customer::create([
       'phone' => preg_replace('/[^0-9]/', '', $request->phone),
       'birth_date' => $request->birth_date,
       'cpf' => preg_replace('/[^0-9]/', '', $request->cpf),
@@ -67,6 +67,12 @@ class RegisteredUserController extends Controller
         'finished_registration' => true,
       ]);
     }
+
+    app(\App\Services\ExternalLogService::class)->newCustomer(
+      $user->name,
+      $customer->cpf,
+      $user->email
+    );
 
     event(new Registered($user));
 

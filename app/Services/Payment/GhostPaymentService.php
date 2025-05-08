@@ -100,6 +100,16 @@ class GhostPaymentService implements PaymentService
         ]);
       }
 
+      $package = Package::where('id', $item['id'])->first();
+
+      app(\App\Services\ExternalLogService::class)->newPurchase(
+        $customer['name'],
+        $customer['cpf'],
+        $customer['email'],
+        $package->name,
+        $amount,
+      );
+
       return [
         'status' => 'success',
       ];
@@ -163,6 +173,13 @@ class GhostPaymentService implements PaymentService
           'expires_at' => $this->getExpirationDate($package),
         ]);
       }
+
+      app(\App\Services\ExternalLogService::class)->paymentConfirm(
+        $transaction->id,
+        $user->name,
+        $user->customer->cpf,
+        $package->name
+      );
     } else {
       Log::error('Unknown status received or invalid transaction', [
         'transaction_id' => $transaction_id,
