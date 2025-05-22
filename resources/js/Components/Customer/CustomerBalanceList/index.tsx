@@ -47,7 +47,7 @@ function CustomerBalanceList({
               variant="transparent"
               color={transaction_type === "deposit" ? "yellow" : "green"}
             >
-              {transaction_type === "deposit" ? "Depósito" : "Retirada"}
+              {transaction_type === "deposit" ? "Compra" : "Retirada"}
             </Badge>
           ),
         },
