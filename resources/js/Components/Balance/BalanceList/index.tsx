@@ -167,7 +167,7 @@ function BalanceList() {
               variant="transparent"
               color={transaction_type === "deposit" ? "green" : "red"}
             >
-              {transaction_type === "deposit" ? "Depósito" : "Retirada"}
+              {transaction_type === "deposit" ? "Compra" : "Retirada"}
             </Badge>
           ),
         },

@@ -25,7 +25,7 @@ class PackageUpdateRequest extends FormRequest
   {
     return [
       'name' => 'required|string',
-      'price' => 'required|decimal:0,2|min:0',
+      'price' => 'required|numeric|min:5',
       'withdraw_percentage' => 'required|decimal:1|min:0',
       'duration_in_months' => 'required|integer|min:1|max:12',
     ];
@@ -43,8 +43,8 @@ class PackageUpdateRequest extends FormRequest
       'name.string' => 'O nome deve ser uma string.',
       'name.unique' => 'O nome já existe.',
       'price.required' => 'O preço é obrigatório.',
-      'price.decimal' => 'O preço deve ser um número.',
-      'price.min' => 'O preço deve ser maior ou igual a 0.',
+      'price.numeric' => 'O preço deve ser um número.',
+      'price.min' => 'O preço deve ser maior ou igual a R$ 5.',
       'withdraw_percentage.required' => 'A porcentagem de retirada é obrigatória.',
       'withdraw_percentage.decimal' => 'A porcentagem de retirada deve ser um número.',
       'withdraw_percentage.min' => 'A porcentagem de retirada deve ser maior ou igual a 0.',

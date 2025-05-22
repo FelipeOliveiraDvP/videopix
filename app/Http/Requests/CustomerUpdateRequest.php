@@ -33,7 +33,6 @@ class CustomerUpdateRequest extends FormRequest
       'phone'        => [
         'required',
         'string',
-        'celular_com_ddd',
         Rule::unique(Customer::class, 'phone')->ignore($customer->id),
       ],
       'birth_date'   => 'required|date|before:today',
