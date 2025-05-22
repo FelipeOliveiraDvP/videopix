@@ -76,17 +76,19 @@ export default function Login({
             />
             <Checkbox
               label="Ao fazer login, você concorda com nossos Termos de Serviço e Política de Privacidade."
-              checked={data.remember}
+              checked={data.accept_terms}
               onChange={(e) =>
                 setData("accept_terms", (e.target.checked || false) as false)
               }
+              error={errors.accept_terms}
             />
             <Checkbox
               label="Confirmo que possuo mais de 18 anos de idade."
-              checked={data.remember}
+              checked={data.adult}
               onChange={(e) =>
                 setData("adult", (e.target.checked || false) as false)
               }
+              error={errors.adult}
             />
             <Button variant="filled" type="submit" loading={processing}>
               Login

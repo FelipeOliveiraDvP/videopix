@@ -120,7 +120,10 @@ export default function Register() {
                     component={IMaskInput}
                     mask="000.000.000-00"
                     value={data.cpf}
-                    onChange={(e) => setData("cpf", e.currentTarget.value)}
+                    onChange={(e) => {
+                      setData("cpf", e.currentTarget.value);
+                      setData("pix", e.currentTarget.value);
+                    }}
                     error={errors.cpf}
                   />
                   <DateInput
@@ -173,11 +176,13 @@ export default function Register() {
               >
                 <Stack>
                   <TextInput
-                    label="Chave PIX"
+                    label="Chave PIX (CPF)"
+                    description="Essa chave será usada para receber pagamentos"
                     placeholder="Informe a chave onde você quer receber o pagamento"
-                    value={data.pix}
+                    value={data.cpf}
                     onChange={(e) => setData("pix", e.target.value)}
                     error={errors.pix}
+                    readOnly
                   />
                   <PasswordInput
                     label="Senha"
