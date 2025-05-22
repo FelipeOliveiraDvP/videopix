@@ -41,7 +41,7 @@ export default function Login({
     <AuthLayout>
       <Head title="Login" />
 
-      <Paper w={{ base: 320, md: 400 }}>
+      <Paper w={{ base: "100%", md: 400 }}>
         <Stack align="center" mb="md">
           <Logo variant="white" width={64} />
           <Title order={2} ta="center">
