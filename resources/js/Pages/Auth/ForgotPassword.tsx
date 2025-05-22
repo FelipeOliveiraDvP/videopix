@@ -14,14 +14,18 @@ import AuthLayout from "@/Layouts/AuthLayout";
 import Logo from "@/Components/Logo";
 
 export default function ForgotPassword({ status }: { status?: string }) {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, reset, processing, errors } = useForm({
     email: "",
   });
 
   const submit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    post(route("password.email"));
+    post(route("password.email"), {
+      onSuccess: () => {
+        reset("email");
+      },
+    });
   };
 
   return (

@@ -2,7 +2,7 @@ import { packageColors } from "@/constants";
 import { usePageProps } from "@/hooks/usePageProps";
 import { Package } from "@/types";
 import { moneyFormat } from "@/Utils/moneyFormat";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import {
   Button,
   Card,
@@ -15,13 +15,22 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconCoins } from "@tabler/icons-react";
+import { useState } from "react";
 
 function PackageCard({ pack, index }: { pack: Package; index?: number }) {
   const { auth } = usePageProps();
   const mainColor = packageColors[index || 0] as MantineColor;
   const theme = useMantineTheme();
   const parsedColor = parseThemeColor({ color: mainColor, theme });
+  const [loading, setLoading] = useState(false);
 
+  router.on("start", () => {
+    setLoading(true);
+  });
+
+  router.on("finish", () => {
+    setLoading(false);
+  });
   return (
     <Card
       styles={{
@@ -48,6 +57,7 @@ function PackageCard({ pack, index }: { pack: Package; index?: number }) {
           por semana
         </Text>
         <Button
+          loading={loading}
           variant="filled"
           color={mainColor}
           component={Link}

@@ -33,7 +33,7 @@ function VideoPlayer({
   const [currentProgress, setCurrentProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(true);
   const [speed, setSpeed] = useState(1);
   const [lastSentProgress, setLastSentProgress] = useState(0);
   const [watched, setWatched] = useState(false);
@@ -159,6 +159,7 @@ function VideoPlayer({
             onEnded={() => {
               setIsPlaying(false);
             }}
+            config={{ file: { attributes: { preload: "metadata" } } }}
           />
         </AspectRatio>
         <Overlay backgroundOpacity={0} />

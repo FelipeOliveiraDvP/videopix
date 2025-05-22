@@ -25,6 +25,8 @@ export default function Login({
     email: "",
     password: "",
     remember: false as boolean,
+    accept_terms: false as boolean,
+    adult: false as boolean,
   });
 
   const submit: FormEventHandler = (e) => {
@@ -39,7 +41,7 @@ export default function Login({
     <AuthLayout>
       <Head title="Login" />
 
-      <Paper w={{ base: 320, md: 400 }}>
+      <Paper w={{ base: "100%", md: 400 }}>
         <Stack align="center" mb="md">
           <Logo variant="white" width={64} />
           <Title order={2} ta="center">
@@ -71,6 +73,22 @@ export default function Login({
               onChange={(e) =>
                 setData("remember", (e.target.checked || false) as false)
               }
+            />
+            <Checkbox
+              label="Ao fazer login, você concorda com nossos Termos de Serviço e Política de Privacidade."
+              checked={data.accept_terms}
+              onChange={(e) =>
+                setData("accept_terms", (e.target.checked || false) as false)
+              }
+              error={errors.accept_terms}
+            />
+            <Checkbox
+              label="Confirmo que possuo mais de 18 anos de idade."
+              checked={data.adult}
+              onChange={(e) =>
+                setData("adult", (e.target.checked || false) as false)
+              }
+              error={errors.adult}
             />
             <Button variant="filled" type="submit" loading={processing}>
               Login
