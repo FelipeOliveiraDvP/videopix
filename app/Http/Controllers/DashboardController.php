@@ -90,7 +90,7 @@ class DashboardController extends Controller
     return Inertia::render('Admin/Dashboard', [
       'totalDeposits' => Transaction::where('transaction_type', 'deposit')->where('status', 'completed')->sum('amount'),
       'totalWithdrawals' => Transaction::where('transaction_type', 'withdraw')->where('status', 'completed')->sum('amount'),
-      'totalVideosWatched' => DB::table('user_videos')->count(),
+      'totalVideosWatched' => DB::table('user_videos')->where('watched', true)->count(),
       'depositLast6Months' => $depositLast6Months,
       'withdrawalsLast6Months' => $withdrawalsLast6Months,
       'balanceLast12Months' => $balanceLast12Months,

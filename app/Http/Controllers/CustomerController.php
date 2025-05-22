@@ -13,6 +13,7 @@ use App\Models\UserPackage;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -96,6 +97,7 @@ class CustomerController extends Controller
     $balance = $user->balance
       ? $user->balance->amount
       : 0;
+    $views = DB::table('user_videos')->where('watched', true)->where('user_id', $user->id)->count();
 
     return Inertia::render('Admin/Customers/Edit', [
       'customer' => new CustomerResource($customer),
@@ -104,6 +106,7 @@ class CustomerController extends Controller
       'deposits' => $deposits,
       'withdraws' => $withdraws,
       'balance' => $balance,
+      'views' => $views,
     ]);
   }
 
