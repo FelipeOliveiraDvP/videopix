@@ -126,6 +126,7 @@ export default function Balance() {
               label="Data de movimentação"
               placeholder="00/00/0000"
               valueFormat="DD/MM/YYYY"
+              locale="pt-br"
               value={
                 dayjs(data.created_at).isValid()
                   ? dayjs(data.created_at).toDate()

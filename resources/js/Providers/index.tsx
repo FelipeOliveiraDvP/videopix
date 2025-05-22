@@ -7,6 +7,7 @@ import {
   Paper,
 } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { DateInput, DatesProvider } from "@mantine/dates";
 
 const theme = createTheme({
   primaryShade: 8,
@@ -36,6 +37,11 @@ const theme = createTheme({
         color: "primary",
       },
     }),
+    DateInput: DateInput.extend({
+      defaultProps: {
+        locale: "pt-br",
+      },
+    }),
     Paper: Paper.extend({
       defaultProps: {
         withBorder: true,
@@ -49,7 +55,9 @@ const theme = createTheme({
 export default function Providers({ children }: { children: ReactNode }) {
   return (
     <MantineProvider defaultColorScheme="dark" theme={theme}>
-      <ModalsProvider>{children}</ModalsProvider>
+      <DatesProvider settings={{ locale: "pt-br" }}>
+        <ModalsProvider>{children}</ModalsProvider>
+      </DatesProvider>
     </MantineProvider>
   );
 }
