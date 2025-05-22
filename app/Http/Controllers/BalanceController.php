@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\WithdrawApprovedEmail;
 use App\Models\Customer;
 use App\Models\Transaction;
+use App\Models\UserPackage;
 use App\Models\UserVideo;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -80,13 +81,15 @@ class BalanceController extends Controller
    */
   public function approve(Transaction $transaction): RedirectResponse
   {
+    $customer = Customer::where('user_id', $transaction->user_id)->first();
+
     if ($transaction->transaction_type == 'withdraw' && $transaction->status == 'pending') {
       $transaction->update([
         'status' => 'completed',
       ]);
+
       $transaction->user->balance->subtract($transaction->amount);
 
-      $customer = Customer::where('user_id', $transaction->user_id)->first();
       $amount = $transaction->amount;
       $deposit_date = now();
 
@@ -104,10 +107,26 @@ class BalanceController extends Controller
       $transaction->update([
         'status' => 'completed',
       ]);
-      $transaction->user->balance->add($transaction->amount);
+
+      $user_package = UserPackage::where('user_id', $customer->user_id)
+        ->where('expires_at', '>=', now())
+        ->first();
+
+      if ($user_package) {
+        $user_package->update([
+          'package_id' => $transaction->item_id,
+          'expires_at' => now()->addDays(30),
+        ]);
+      } else {
+        UserPackage::create([
+          'user_id' => $customer->user_id,
+          'package_id' => $transaction->item_id,
+          'expires_at' => now()->addDays(30),
+        ]);
+      }
 
       return Redirect::route('admin.balance')
-        ->with('success', 'Depósito aprovado com sucesso.');
+        ->with('success', 'Compra aprovada com sucesso.');
     }
 
     return Redirect::route('admin.balance')
