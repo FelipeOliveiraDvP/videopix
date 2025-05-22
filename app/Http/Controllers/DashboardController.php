@@ -83,6 +83,10 @@ class DashboardController extends Controller
       ->groupBy('packages.name')
       ->get();
 
+    $totalInvites = DB::table("customer_invites")->select("*")->get()->count();
+    $acceptedInvites = DB::table("customer_invites")->where("finished_registration", true)->select("*")->get()->count();
+    $conversionRate = $totalInvites > 0 ? ($acceptedInvites / $totalInvites) * 100 : 0;
+
     return Inertia::render('Admin/Dashboard', [
       'totalDeposits' => Transaction::where('transaction_type', 'deposit')->where('status', 'completed')->sum('amount'),
       'totalWithdrawals' => Transaction::where('transaction_type', 'withdraw')->where('status', 'completed')->sum('amount'),
@@ -92,6 +96,8 @@ class DashboardController extends Controller
       'balanceLast12Months' => $balanceLast12Months,
       'depositsByPackage' => $depositsByPackage,
       'clientsByPackage' => $clientsByPackage,
+      'totalInvites' => $totalInvites,
+      'conversionRate' => $conversionRate,
     ]);
   }
 

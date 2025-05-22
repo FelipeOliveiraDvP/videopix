@@ -24,6 +24,8 @@ export default function Dashboard() {
     balanceLast12Months,
     depositsByPackage,
     clientsByPackage,
+    totalInvites,
+    conversionRate,
   } = usePageProps<DashboardProps>();
 
   return (
@@ -38,8 +40,11 @@ export default function Dashboard() {
         >
           <StatsCard type="deposits" value={moneyFormat(totalDeposits)} />
           <StatsCard type="withdrawals" value={moneyFormat(totalWithdrawals)} />
-          <StatsCard type="invites" value="0" />
-          <StatsCard type="conversion" value="0%" />
+          <StatsCard type="invites" value={String(totalInvites)} />
+          <StatsCard
+            type="conversion"
+            value={`${Math.round(conversionRate)}%`}
+          />
           <StatsCard type="views" value={`${totalVideosWatched}`} />
         </SimpleGrid>
         <Grid>

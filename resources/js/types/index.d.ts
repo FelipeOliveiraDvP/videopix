@@ -88,6 +88,8 @@ export interface Dashboard {
   balanceLast12Months: Array<{ date: string; total: number }>;
   depositsByPackage: Array<{ package: string; total: number }>;
   clientsByPackage: Array<{ package: string; total: number }>;
+  totalInvites: number;
+  conversionRate: number;
 }
 
 export type PageProps<
