@@ -34,7 +34,12 @@ const theme = createTheme({
     }),
     Button: Button.extend({
       defaultProps: {
+        variant: "filled",
         color: "primary",
+        autoContrast: true,
+        loaderProps: {
+          color: "white",
+        },
       },
     }),
     DateInput: DateInput.extend({
