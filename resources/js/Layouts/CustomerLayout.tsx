@@ -16,7 +16,7 @@ export default function CustomerLayout({ children }: PropsWithChildren) {
   return (
     <Providers>
       <AppShell
-        header={{ height: { base: 60, md: 70, lg: 80 } }}
+        header={{ height: { base: 80 } }}
         navbar={{
           width: 300,
           breakpoint: "sm",
