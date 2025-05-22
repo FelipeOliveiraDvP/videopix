@@ -25,7 +25,7 @@ class VideoRequest extends FormRequest
   {
     return [
       'url' => 'required|string|url',
-      'price' => 'required|decimal:2|min:0',
+      'price' => 'required|numeric|min:0',
       'duration' => 'required|integer|min:0',
     ];
   }
