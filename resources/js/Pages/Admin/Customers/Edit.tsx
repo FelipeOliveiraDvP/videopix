@@ -25,15 +25,23 @@ import { IMaskInput } from "react-imask";
 import dayjs from "dayjs";
 
 export default function Edit() {
-  const { customer, customer_package, packages, deposits, withdraws, balance } =
-    usePageProps<{
-      customer: Customer;
-      packages: Package[];
-      customer_package: Package | null;
-      withdraws: number;
-      deposits: number;
-      balance: number;
-    }>();
+  const {
+    customer,
+    customer_package,
+    packages,
+    deposits,
+    withdraws,
+    balance,
+    views,
+  } = usePageProps<{
+    customer: Customer;
+    packages: Package[];
+    customer_package: Package | null;
+    withdraws: number;
+    deposits: number;
+    balance: number;
+    views: number;
+  }>();
 
   const { data, setData, put, processing, errors, reset } = useForm({
     name: customer.name || "",
@@ -166,6 +174,7 @@ export default function Edit() {
                     value={moneyFormat(withdraws)}
                   />
                   <StatsCard type="balance" value={moneyFormat(balance)} />
+                  <StatsCard type="views" value={String(views)} />
                 </SimpleGrid>
               </Grid.Col>
             </Grid>
