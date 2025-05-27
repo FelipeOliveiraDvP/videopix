@@ -43,9 +43,6 @@ class WithdrawController extends Controller
   /**
    * Store a new customer withdraw.
    */
-  /**
-   * Store a new customer withdraw.
-   */
   public function store(Request $request): RedirectResponse
   {
     if (!can_withdraw()) {
@@ -89,7 +86,6 @@ class WithdrawController extends Controller
       ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
       ->sum('amount');
 
-    // Valida saldo e limite semanal
     if ($requestAmount > $userBalance) {
       return Redirect::route('customer.withdraw')
         ->with('error', 'Você não tem saldo suficiente para fazer o saque.');

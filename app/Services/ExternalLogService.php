@@ -17,7 +17,7 @@ class ExternalLogService
       'embeds' => [
         [
           'title' => 'Detalhes do erro',
-          'description' => $exception->getMessage(),
+          'description' => substr($exception->getMessage(), 0, 1200),
           'fields' => [
             [
               'name' => 'Arquivo',

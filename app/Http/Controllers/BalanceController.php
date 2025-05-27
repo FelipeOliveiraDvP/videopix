@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\UserPackage;
 use App\Models\UserVideo;
+use App\Services\BrevoService;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
@@ -79,7 +80,7 @@ class BalanceController extends Controller
   /**
    * Approve a customer withdraw.
    */
-  public function approve(Transaction $transaction): RedirectResponse
+  public function approve(Transaction $transaction, BrevoService $brevo): RedirectResponse
   {
     $customer = Customer::where('user_id', $transaction->user_id)->first();
 
@@ -93,11 +94,27 @@ class BalanceController extends Controller
       $amount = $transaction->amount;
       $deposit_date = now();
 
-      Mail::to($customer->user->email)->send(new WithdrawApprovedEmail(
-        $customer,
-        $amount,
-        $deposit_date
-      ));
+
+      if (app()->environment('production')) {
+        $brevo->sendMail([
+          'subject' => 'Seu saque foi aprovado!',
+          'htmlContent' => view('emails.withdraw', [
+            'customer' => $customer,
+            'amount' => $amount,
+            'deposit_date' => $deposit_date,
+          ])->render(),
+          'to' => [[
+            'email' => $customer->user->email,
+            'name' => $customer->user->name,
+          ]],
+        ]);
+      } else {
+        Mail::to($customer->user->email)->send(new WithdrawApprovedEmail(
+          $customer,
+          $amount,
+          $deposit_date
+        ));
+      }
 
       return Redirect::route('admin.balance')
         ->with('success', 'Saque aprovado com sucesso.');

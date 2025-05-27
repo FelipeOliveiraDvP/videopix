@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\CustomerInvite;
 use App\Models\Package;
 use App\Models\UserPackage;
+use App\Services\BrevoService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -144,7 +145,7 @@ class CustomerController extends Controller
   /**
    * Send invitations to customers.
    */
-  public function invite(CustomerInvitationRequest $request): RedirectResponse
+  public function invite(CustomerInvitationRequest $request, BrevoService $brevo): RedirectResponse
   {
     $emails = $request->validated()['emails'];
 
@@ -167,7 +168,20 @@ class CustomerController extends Controller
         ['email' => $email, 'code' => $code]
       );
 
-      Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
+      if (app()->environment('production')) {
+        $brevo->sendMail([
+          'subject' => 'Você foi convidado para se juntar ao Video PIX',
+          'htmlContent' => view('emails.invite', [
+            'inviteLink' => $inviteLink,
+          ])->render(),
+          'to' => [[
+            'email' => $email,
+            'name' => 'Novo Cliente',
+          ]],
+        ]);
+      } else {
+        Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
+      }
     }
 
     return redirect()->back()->with('success', 'Convites enviados com sucesso!');
