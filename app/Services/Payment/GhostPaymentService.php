@@ -152,9 +152,24 @@ class GhostPaymentService implements PaymentService
       ]);
 
       // Send email to user
+      $user = $transaction->user;
+      $package = Package::where('id', $transaction->item_id)->first();
+
       if (App::environment('production')) {
-        $user = $transaction->user;
-        $package = Package::where('id', $transaction->item_id)->first();
+        $brevo = app(\App\Services\BrevoService::class);
+
+        $brevo->sendMail([
+          'subject' => 'Seu pagamento foi confirmado!',
+          'htmlContent' => view('emails.payment', [
+            'user' => $user,
+            'package' => $package,
+          ])->render(),
+          'to' => [[
+            'email' => $user->email,
+            'name' => $user->name,
+          ]],
+        ]);
+      } else {
         Mail::to($user->email)->send(new PaymentConfirmEmail($user, $package));
       }
 
