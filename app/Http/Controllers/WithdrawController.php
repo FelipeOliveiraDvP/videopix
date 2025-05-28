@@ -24,6 +24,8 @@ class WithdrawController extends Controller
     // Calcular o valor total de transações que o usuário fez essa semana
     $total_transactions = Auth::user()->transactions()
       ->where('created_at', '>=', now()->startOfWeek())
+      ->where('transaction_type', 'withdraw')
+      ->where('status', 'completed')
       ->sum('amount');
 
     $current_package = Package::where('id', function ($query) {
