@@ -27,11 +27,11 @@ export const transactionStatus: Record<
     color: "yellow",
   },
   completed: {
-    label: "Sucesso",
+    label: "Aprovado",
     color: "green",
   },
   failed: {
-    label: "Falha",
+    label: "Recusado",
     color: "red",
   },
 };
