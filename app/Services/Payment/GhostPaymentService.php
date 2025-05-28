@@ -23,29 +23,28 @@ class GhostPaymentService implements PaymentService
       }
 
       $transaction = Transaction::where('user_id', $customer['id'])
-        ->where('item_id', $item['id'])
         ->where('status', 'pending')
         ->where('transaction_type', 'deposit')
         ->first();
 
-      if (App::environment('development')) {
-        if (!$transaction) {
-          Transaction::create([
-            'amount' => $amount,
-            'user_id' => $customer['id'],
-            'item_id' => $item['id'],
-            'status' => 'pending',
-            'transaction_type' => 'deposit',
-            'external_id' => uniqid(),
-            'pix_code' => '123456789',
-            'pix_qrcode' => 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE',
-          ]);
-        }
+      // if (App::environment('development')) {
+      //   if (!$transaction) {
+      //     Transaction::create([
+      //       'amount' => $amount,
+      //       'user_id' => $customer['id'],
+      //       'item_id' => $item['id'],
+      //       'status' => 'pending',
+      //       'transaction_type' => 'deposit',
+      //       'external_id' => uniqid(),
+      //       'pix_code' => '123456789',
+      //       'pix_qrcode' => 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PIXCODE',
+      //     ]);
+      //   }
 
-        return [
-          'status' => 'success',
-        ];
-      }
+      //   return [
+      //     'status' => 'success',
+      //   ];
+      // }
 
       $api_key = config('services.ghost.api_key');
       $api_url = config('services.ghost.api_url');
@@ -94,6 +93,7 @@ class GhostPaymentService implements PaymentService
       } else {
         $transaction->update([
           'amount' => $amount,
+          'item_id' => $item['id'],
           'external_id' => $response['id'],
           'pix_code' => $response['pixCode'],
           'pix_qrcode' => $response['pixQrCode'],

@@ -147,6 +147,15 @@ class BalanceController extends Controller
         ->with('success', 'Saque recusado com sucesso.');
     }
 
+    if ($transaction->transaction_type == 'deposit' && $transaction->status == 'pending') {
+      $transaction->update([
+        'status' => 'failed',
+      ]);
+
+      return Redirect::route('admin.balance')
+        ->with('success', 'Compra recusada com sucesso.');
+    }
+
     return Redirect::route('admin.balance')
       ->with('error', 'Ocorreu algum erro ao recusar o saque.');
   }
