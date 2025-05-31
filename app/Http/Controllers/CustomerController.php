@@ -15,8 +15,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -199,5 +197,40 @@ class CustomerController extends Controller
     return redirect()
       ->route('admin.customers.index')
       ->with('success', 'Cliente excluído com sucesso.');
+  }
+
+  public function sendInvite(Request $request)
+  {
+    try {
+      $request->validate([
+        'email' => 'required|email',
+      ]);
+
+      $email = $request->input('email');
+
+      if (CustomerInvite::where('email', $email)->exists()) {
+        return response()->json(['message' => 'Convite já enviado para este e-mail.'], 400);
+      }
+
+      $code = Str::uuid();
+
+      CustomerInvite::create([
+        'email' => $email,
+        'code' => $code,
+        'expires_at' => now()->addDays(7),
+      ]);
+
+      $inviteLink = URL::temporarySignedRoute(
+        'register.invite',
+        now()->addDays(7),
+        ['email' => $email, 'code' => $code]
+      );
+
+      Mail::to($email)->send(new InviteCustomerEmail($inviteLink));
+
+      return response()->json(['message' => 'Convite enviado com sucesso!', 'invite_link' => $inviteLink], 200);
+    } catch (Exception $e) {
+      return response()->json(['message' => 'Erro ao enviar convite: ' . $e->getMessage()], 500);
+    }
   }
 }
